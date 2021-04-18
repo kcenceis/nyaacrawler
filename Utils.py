@@ -84,27 +84,33 @@ def getBookCover(mSoup, mCount, mBookTitle):
         b = str(b)
         pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')  # 匹配模式
         url = re.findall(pattern, b)
-        count = 1
-        for b in url:
-            # 识别NYAA网页内容,内容是否包含http
-            if re.search('http', b):
-                # 只获取https://hentai-covers.site开头的网址
-                if re.search('https://hentai-covers.site', b):
-                    hentaicovers.getImageURL(b, mBookTitle[mCount])
-                # 只获取https://hentai4free.net开头的网址
-                # b=图片url,mBookTitle[mCount]=图片标题,count=第几张图片,len(url)=url总数
-                elif re.search('https://hentai4free.net', b):
-                    hentai4free.getImageURL(b, mBookTitle[mCount], count, len(url))
-                # 只获取https://imagetwist.com开头的网址
-                elif re.search('https://imagetwist.com', b):
-                    imagetwist.getImageURL(b, mBookTitle[mCount], count, len(url))
-                # 不在抓取范围,结束抓取并记录
+        # 防止没有http字段
+        if len(url) > 0:
+            count = 1
+            for b in url:
+                # 识别NYAA网页内容,内容是否包含http
+                if re.search('http', b):
+                    # 只获取https://hentai-covers.site开头的网址
+                    if re.search('https://hentai-covers.site', b):
+                        hentaicovers.getImageURL(b, mBookTitle[mCount])
+                    # 只获取https://hentai4free.net开头的网址
+                    # b=图片url,mBookTitle[mCount]=图片标题,count=第几张图片,len(url)=url总数
+                    elif re.search('https://hentai4free.net', b):
+                        hentai4free.getImageURL(b, mBookTitle[mCount], count, len(url))
+                    # 只获取https://imagetwist.com开头的网址
+                    elif re.search('https://imagetwist.com', b):
+                        imagetwist.getImageURL(b, mBookTitle[mCount], count, len(url))
+                    elif re.search('https://imgfrost.net', b):
+                        imgfrost.getImageURL(b, mBookTitle[mCount])
+                    # 不在抓取范围,结束抓取并记录
+                    else:
+                        SQLUTILS.updateSQL_Download(mBookTitle[mCount])
+                # 不包含http,则直接结束抓取并记录
                 else:
                     SQLUTILS.updateSQL_Download(mBookTitle[mCount])
-            # 不包含http,则直接结束抓取并记录
-            else:
-                SQLUTILS.updateSQL_Download(mBookTitle[mCount])
-            count += 1
+                count += 1
+        else:
+            SQLUTILS.updateSQL_Download(mBookTitle[mCount])
 
 
 # 定义Request方法,request headers 和 proxy

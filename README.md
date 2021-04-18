@@ -1,5 +1,5 @@
 # nyaacatch
-抓取Nyaa预览图
+抓取sukeibei.nyaa预览图
 
 Python version:3.7
 

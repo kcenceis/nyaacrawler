@@ -8,7 +8,7 @@ def getImageURL(mUrlist, mBookTitle):
     # https://imgfrost.net 的url将会跳转至 http://imgair.net
     new_mUrllist = str(mUrlist).replace('https://imgfrost.net', 'http://imgair.net')
     # 开始请求
-    req = requests.get(new_mUrllist)
+    req = Utils.getRequest(new_mUrllist)
     soup = BeautifulSoup(req.text, 'html.parser')
     # 获取包含 document.location.href="https://prcf.imgbig.xyz/ 的字段
     pattern = re.compile(r"document.location.href=\"https://prcf.imgbig.xyz/(.*?);$", re.MULTILINE | re.DOTALL)

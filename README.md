@@ -1,5 +1,6 @@
 # nyaacatch
 抓取Nyaa预览图
+
 Python version:3.7
 
 ## 安装依赖

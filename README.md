@@ -3,6 +3,12 @@
 
 Python version:3.7
 
+# 现可抓取网址
+- hentaicovers
+- hentai4free
+- imagetwist
+- imgfrost
+
 ## 安装依赖
 pip install -r requirements.txt
 

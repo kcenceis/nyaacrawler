@@ -8,12 +8,9 @@ Python version:3.7
 
 * hentaicovers
 * hentai4free
-
-
 * imagetwist
-
-
 * imgfrost
+* imgblaze
 
 ## 安装依赖
 

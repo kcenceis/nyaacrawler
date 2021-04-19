@@ -7,8 +7,9 @@ import hentaicovers
 from requests.adapters import HTTPAdapter
 
 import imagetwist
+import imgfrost
 
-proxyON = False  # 是否开启代理
+proxyON = True  # 是否开启代理
 filePath = os.path.split(os.path.realpath(__file__))[0]  # 获取脚本当前目录
 # socks代理规则
 proxies = {'http': 'socks5://127.0.0.1:1080',
@@ -84,7 +85,6 @@ def getBookCover(mSoup, mCount, mBookTitle):
         b = str(b)
         pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')  # 匹配模式
         url = re.findall(pattern, b)
-        # 防止没有http字段
         if len(url) > 0:
             count = 1
             for b in url:
@@ -100,7 +100,9 @@ def getBookCover(mSoup, mCount, mBookTitle):
                     # 只获取https://imagetwist.com开头的网址
                     elif re.search('https://imagetwist.com', b):
                         imagetwist.getImageURL(b, mBookTitle[mCount], count, len(url))
-                    elif re.search('https://imgfrost.net', b):
+                    elif re.search('https://imgfrost.net', b, "0"):
+                        imgfrost.getImageURL(b, mBookTitle[mCount])
+                    elif re.search('http://imgblaze.net', b, "1"):
                         imgfrost.getImageURL(b, mBookTitle[mCount])
                     # 不在抓取范围,结束抓取并记录
                     else:

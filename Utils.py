@@ -9,7 +9,7 @@ from requests.adapters import HTTPAdapter
 import imagetwist
 import imgfrost
 
-proxyON = True  # 是否开启代理
+proxyON = False  # 是否开启代理
 filePath = os.path.split(os.path.realpath(__file__))[0]  # 获取脚本当前目录
 # socks代理规则
 proxies = {'http': 'socks5://127.0.0.1:1080',

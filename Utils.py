@@ -19,8 +19,8 @@ headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/
                          "Chrome/85.0.4183.83 Safari/537.36"}
 
 mReq = requests.session()
-mReq.mount('https://', HTTPAdapter(max_retries=3))
-mReq.mount('http://', HTTPAdapter(max_retries=3))
+mReq.mount('https://', HTTPAdapter(max_retries=5))
+mReq.mount('http://', HTTPAdapter(max_retries=5))
 
 
 def __init__(self):
@@ -38,24 +38,6 @@ def download_img(url, title):
         with open(path + title + r'.jpg', 'wb') as g:
             g.write(img)
             SQLUTILS.updateSQL_Download(title)
-    except:
-        pass
-
-
-# 图片的URL,图片的标题，第几个url(用于标记title)，URL总数（用于判断是否已经完成)
-def download_img_count(url, title, URLCOUNT, mUrl):
-    path = filePath + os.sep + Directory + os.sep
-    # print(URLCOUNT)
-    # print(mUrl)
-    if not os.path.exists(path):
-        os.mkdir(path)
-    try:
-        response = getRequest(url)
-        img = response.content
-        with open(path + title + str(URLCOUNT) + r'.jpg', 'wb') as g:
-            g.write(img)
-            if mUrl == URLCOUNT:
-                SQLUTILS.updateSQL_Download(title)
     except:
         pass
 
@@ -96,14 +78,14 @@ def getBookCover(mSoup, mCount, mBookTitle):
                     # 只获取https://hentai4free.net开头的网址
                     # b=图片url,mBookTitle[mCount]=图片标题,count=第几张图片,len(url)=url总数
                     elif re.search('https://hentai4free.net', b):
-                        hentai4free.getImageURL(b, mBookTitle[mCount], count, len(url))
+                        hentai4free.getImageURL(b, mBookTitle[mCount], len(url))
                     # 只获取https://imagetwist.com开头的网址
                     elif re.search('https://imagetwist.com', b):
-                        imagetwist.getImageURL(b, mBookTitle[mCount], count, len(url))
-                    elif re.search('https://imgfrost.net', b, "0"):
-                        imgfrost.getImageURL(b, mBookTitle[mCount])
-                    elif re.search('http://imgblaze.net', b, "1"):
-                        imgfrost.getImageURL(b, mBookTitle[mCount])
+                        imagetwist.getImageURL(b, mBookTitle[mCount], len(url))
+                    elif re.search('https://imgfrost.net', b):
+                        imgfrost.getImageURL(url, mBookTitle[mCount], "0")
+                    elif re.search('http://imgblaze.net', b):
+                        imgfrost.getImageURL(url, mBookTitle[mCount], "1")
                     # 不在抓取范围,结束抓取并记录
                     else:
                         SQLUTILS.updateSQL_Download(mBookTitle[mCount])
@@ -122,5 +104,5 @@ def getRequest(http_url):
         r = mReq.get(url=http_url, headers=headers, proxies=proxies, timeout=10)
     else:
         r = mReq.get(url=http_url, headers=headers, timeout=10)
-    r.raise_for_status()
+    # r.raise_for_status()
     return r

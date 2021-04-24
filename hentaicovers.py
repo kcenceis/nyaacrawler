@@ -1,7 +1,5 @@
 from bs4 import BeautifulSoup
 import Utils
-import requests
-
 
 def getImageURL(mUrlist, mBookTitle):
     # 获取封面 https://hentai-covers.site/images/2019/09/05/seiginoYbutachanbon.jpg

@@ -8,8 +8,6 @@ import Utils
 urlDoujinshi = "https://sukebei.nyaa.si/?f=0&c=1_2&q="  # 同人志
 urlManga = 'https://sukebei.nyaa.si/?f=0&c=1_4&q='  # 漫画
 urlPicture = 'https://sukebei.nyaa.si/?f=0&c=1_5&q='  # 图片
-count = 0
-count2 = 0
 argvalue = sys.argv[1:]
 
 

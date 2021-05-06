@@ -7,7 +7,7 @@ import Utils
 # type=0 imgfrost.net
 # type=1 imgblaze.net
 # 截取script中的document内容
-def getImageURL(mUrlist, mBookTitle, type):
+def getImageURL(mUrlist, nyaa_list, type):
     # 若mUrlist的条目多于1
     count = 0
     if len(mUrlist) > 1:
@@ -29,7 +29,8 @@ def getImageURL(mUrlist, mBookTitle, type):
         url = re.findall(pattern, str(soup_document))
 
         if count == 0:
-            Utils.download_img(url[0], mBookTitle)
+            Utils.download_img(url[0], nyaa_list)
         else:
-            Utils.download_img(url[0], mBookTitle + count)
+            nyaa_list.title = nyaa_list.title + count
+            Utils.download_img(url[0], nyaa_list + count)
             count += 1

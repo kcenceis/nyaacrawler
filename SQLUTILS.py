@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-SQLDATABASEFILE = os.path.split(os.path.realpath(__file__))[0]+os.sep+'bookAddress.db'  # 数据库文件名称
+SQLDATABASEFILE = os.path.split(os.path.realpath(__file__))[0] + os.sep + 'bookAddress.db'  # 数据库文件名称
 
 
 def connSQL():
@@ -14,21 +14,38 @@ def connSQL():
         c.execute('''CREATE TABLE httphistory                      
        (ID INTEGER PRIMARY KEY AUTOINCREMENT,
        ADDRESS        CHAR(50),
-       TITLE          CHAR(200),
        finish         INT(4),
        dDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
        );''')
+        c.execute('''CREATE TABLE file_history                      
+        (ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        ADDRESS        CHAR(50),
+        TITLE          CHAR(200),
+        torrent        CHAR(2000),
+        MAGNET         CHAR(2000),
+        dDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );''')
         # 插入数据表
         conn.commit()
         c.close()
         conn.close()
 
 
-def insertSQL(mAddress, mTitle):
+def insertSQL(mAddress):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
-    c.execute("INSERT INTO httphistory (ADDRESS,TITLE) \
-      VALUES (?,?)", (mAddress, mTitle,));
+    c.execute("INSERT INTO httphistory (ADDRESS) \
+      VALUES (?)", (mAddress,))
+    conn.commit()
+    c.close()
+    conn.close()
+
+
+def insertSQL_file_history(nyaa_list):
+    conn = sqlite3.connect(SQLDATABASEFILE)
+    c = conn.cursor()
+    c.execute("INSERT INTO file_history (ADDRESS,TITLE,torrent,MAGNET) \
+      VALUES (?,?,?,?)", (nyaa_list.link,nyaa_list.title,nyaa_list.torrent,nyaa_list.magnet,))
     conn.commit()
     c.close()
     conn.close()
@@ -48,7 +65,7 @@ def selectSQL():
 
 
 # 获取有多少相同的地址，返回bool
-def countSQL(mAddress):
+def isFinish(mAddress):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
     # 查询数据
@@ -69,7 +86,6 @@ def HAS_SQL(mAddress):
     c = conn.cursor()
     # 查询数据
     cursor = c.execute("SELECT count(*) as count  from httphistory where ADDRESS = ?", (mAddress,))
-    # values = cursor.fetchone()
     result = cursor.fetchone()[0]
     cursor.close()
     conn.close()
@@ -80,10 +96,10 @@ def HAS_SQL(mAddress):
 
 
 # 更新数据库，标识是否下载完毕
-def updateSQL_Download(mTITLE):
+def updateSQL_Download(mADDRESS):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
-    cursor = c.execute('''update httphistory set finish='1' where TITLE= ?''', (mTITLE,))
+    cursor = c.execute('''update httphistory set finish='1' where ADDRESS= ?''', (mADDRESS,))
     conn.commit()
     cursor.close()
     conn.close()

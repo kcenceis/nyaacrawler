@@ -28,16 +28,17 @@ def __init__(self):
 
 
 # url,标题
-def download_img(url, title):
+def download_img(url, nyaa_list):
     path = filePath + os.sep + Directory + os.sep
     if not os.path.exists(path):
         os.mkdir(path)
     try:
         response = getRequest(url)
         img = response.content
-        with open(path + title + r'.jpg', 'wb') as g:
+        with open(path + nyaa_list.title + r'.jpg', 'wb') as g:
             g.write(img)
-            SQLUTILS.updateSQL_Download(title)
+            SQLUTILS.updateSQL_Download(nyaa_list.link)
+            SQLUTILS.insertSQL_file_history(nyaa_list)
     except:
         pass
 
@@ -57,9 +58,10 @@ def Directory(self, value):
 # mCount Title的列表位置
 # mBoookTitle 第一页面所有Title(列表)
 # 获取图片
-def getBookCover(mSoup, mCount, mBookTitle):
+def getBookCover(mSoup, nyaa_list):
+    print(nyaa_list.title)
     for stringSoup in mSoup.find_all('div', id='torrent-description'):
-        # 获取地址https://hentai-covers.site/
+        # 获取预览图地址
         b = stringSoup.string  # 获取网页文中字段
 
         print(b)
@@ -74,27 +76,27 @@ def getBookCover(mSoup, mCount, mBookTitle):
                 if re.search('http', b):
                     # 只获取https://hentai-covers.site开头的网址
                     if re.search('https://hentai-covers.site', b):
-                        hentaicovers.getImageURL(b, mBookTitle[mCount])
+                        hentaicovers.getImageURL(b, nyaa_list)
                     # 只获取https://hentai4free.net开头的网址
                     # b=图片url,mBookTitle[mCount]=图片标题,count=第几张图片,len(url)=url总数
                     elif re.search('https://hentai4free.net', b):
-                        hentai4free.getImageURL(b, mBookTitle[mCount], len(url))
+                        hentai4free.getImageURL(url, nyaa_list)
                     # 只获取https://imagetwist.com开头的网址
                     elif re.search('https://imagetwist.com', b):
-                        imagetwist.getImageURL(b, mBookTitle[mCount], len(url))
+                        imagetwist.getImageURL(url, nyaa_list)
                     elif re.search('https://imgfrost.net', b):
-                        imgfrost.getImageURL(url, mBookTitle[mCount], "0")
+                        imgfrost.getImageURL(url, nyaa_list, "0")
                     elif re.search('http://imgblaze.net', b):
-                        imgfrost.getImageURL(url, mBookTitle[mCount], "1")
+                        imgfrost.getImageURL(url, nyaa_list, "1")
                     # 不在抓取范围,结束抓取并记录
                     else:
-                        SQLUTILS.updateSQL_Download(mBookTitle[mCount])
+                        SQLUTILS.updateSQL_Download(nyaa_list.link)
                 # 不包含http,则直接结束抓取并记录
                 else:
-                    SQLUTILS.updateSQL_Download(mBookTitle[mCount])
+                    SQLUTILS.updateSQL_Download(nyaa_list.link)
                 count += 1
         else:
-            SQLUTILS.updateSQL_Download(mBookTitle[mCount])
+            SQLUTILS.updateSQL_Download(nyaa_list.link)
 
 
 # 定义Request方法,request headers 和 proxy

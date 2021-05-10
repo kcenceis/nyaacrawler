@@ -66,9 +66,22 @@ soup = BeautifulSoup(r.text, 'html.parser')
 download_pattern = re.compile(r'/download/(?:[0-9])+.torrent')  # 种子pattern
 magnet_pattern = re.compile(r'magnet:\?xt=urn:btih:')  # 磁链pattern
 
+
 book_list = []  # 创建集合
 # 获取<tr class='success'>中的所有内容
 for k in soup.find_all('tr', class_='success'):
+    s = nyaa_list()
+    for i in k.find_all('a'):
+        if re.search(download_pattern, str(i)):
+            s.torrent = i['href']
+        if re.search(magnet_pattern, str(i)):
+            s.magnet = i['href']
+        if re.search(r'/view/', str(i)):
+            s.link = i['href']
+            s.title = i['title']
+    book_list.append(s)
+
+for k in soup.find_all('tr', class_='default'):
     s = nyaa_list()
     for i in k.find_all('a'):
         if re.search(download_pattern, str(i)):

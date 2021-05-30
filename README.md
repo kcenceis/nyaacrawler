@@ -52,7 +52,7 @@ SQLite: bookAddress.db
 <div style=" display:table-cell; float:left;">
     <table>
         <tr>
-            <td colspan="4" align="center">httphistory</td>
+            <td colspan="4" align="center">http_history</td>
         </tr>
         <tr>
             <td>Column</td>
@@ -61,13 +61,13 @@ SQLite: bookAddress.db
             <td>PK</td>
         </tr>
         <tr>
-            <td>ID</td>
+            <td>id</td>
             <td>INTEGER</td>
             <td></td>
             <td>PK</td>
         </tr>
         <tr>
-            <td>ADDRESS</td>
+            <td>address</td>
             <td>CHAR</td>
             <td>50</td>
             <td></td>
@@ -99,19 +99,19 @@ SQLite: bookAddress.db
             <td>PK</td>
         </tr>
         <tr>
-            <td>ID</td>
+            <td>id</td>
             <td>INTEGER</td>
             <td></td>
             <td>PK</td>
         </tr>
         <tr>
-            <td>ADDRESS</td>
+            <td>address</td>
             <td>CHAR</td>
             <td>50</td>
             <td></td>
         </tr>
         <tr>
-            <td>TITLE</td>
+            <td>title</td>
             <td>CHAR</td>
             <td>200</td>
             <td></td>
@@ -123,7 +123,19 @@ SQLite: bookAddress.db
             <td></td>
         </tr>
         <tr>
-            <td>MAGNET</td>
+            <td>magnet</td>
+            <td>CHAR</td>
+            <td>2000</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>category</td>
+            <td>CHAR</td>
+            <td>2000</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>file_name</td>
             <td>CHAR</td>
             <td>2000</td>
             <td></td>

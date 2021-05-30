@@ -11,19 +11,20 @@ def connSQL():
         c = conn.cursor()
 
         # 执行创建表
-        c.execute('''CREATE TABLE httphistory                      
-       (ID INTEGER PRIMARY KEY AUTOINCREMENT,
-       ADDRESS        CHAR(50),
+        c.execute('''CREATE TABLE http_history                      
+       (id INTEGER PRIMARY KEY AUTOINCREMENT,
+       address        CHAR(50),
        finish         INT(4),
        dDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
        );''')
         c.execute('''CREATE TABLE file_history                      
-        (ID INTEGER PRIMARY KEY AUTOINCREMENT,
-        ADDRESS        CHAR(50),
-        TITLE          CHAR(200),
+        (id INTEGER PRIMARY KEY AUTOINCREMENT,
+        address        CHAR(50),
+        title          CHAR(200),
         torrent        CHAR(2000),
-        MAGNET         CHAR(2000),
-        file_name         CHAR(2000),
+        magnet         CHAR(2000),
+        category       CHAR(2000),
+        file_name      CHAR(2000),
         dDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );''')
         # 插入数据表
@@ -35,7 +36,7 @@ def connSQL():
 def insertSQL(mAddress):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
-    c.execute("INSERT INTO httphistory (ADDRESS) \
+    c.execute("INSERT INTO http_history (address) \
       VALUES (?)", (mAddress,))
     conn.commit()
     c.close()
@@ -45,8 +46,14 @@ def insertSQL(mAddress):
 def insertSQL_file_history(nyaa_list):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
-    c.execute("INSERT INTO file_history (ADDRESS,TITLE,torrent,MAGNET,file_name) \
-      VALUES (?,?,?,?,?)", (nyaa_list.link,nyaa_list.title,nyaa_list.torrent,nyaa_list.magnet,nyaa_list.file_name,))
+    c.execute("INSERT INTO file_history (address,title,torrent,magnet,category,file_name) \
+      VALUES (?,?,?,?,?,?)",
+              (nyaa_list.address,
+               nyaa_list.title,
+               nyaa_list.torrent,
+               nyaa_list.magnet,
+               nyaa_list.category,
+               nyaa_list.file_name,))
     conn.commit()
     c.close()
     conn.close()
@@ -57,7 +64,7 @@ def selectSQL():
     c = conn.cursor()
     conn.commit()
     # 查询数据
-    cursor = c.execute("SELECT *  from httphistory")
+    cursor = c.execute("SELECT *  from http_history")
     for row in cursor:
         print("ID = ", row[0])
         print("ADDRESS = ", row[1])
@@ -70,7 +77,7 @@ def isFinish(mAddress):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
     # 查询数据
-    cursor = c.execute("SELECT count(*) as count  from httphistory where ADDRESS = ? and finish='1'", (mAddress,))
+    cursor = c.execute("SELECT count(*) as count  from http_history where address = ? and finish='1'", (mAddress,))
     # values = cursor.fetchone()
     result = cursor.fetchone()[0]
     cursor.close()
@@ -86,7 +93,7 @@ def HAS_SQL(mAddress):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
     # 查询数据
-    cursor = c.execute("SELECT count(*) as count  from httphistory where ADDRESS = ?", (mAddress,))
+    cursor = c.execute("SELECT count(*) as count  from http_history where address = ?", (mAddress,))
     result = cursor.fetchone()[0]
     cursor.close()
     conn.close()
@@ -100,7 +107,7 @@ def HAS_SQL(mAddress):
 def updateSQL_Download(mADDRESS):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
-    cursor = c.execute('''update httphistory set finish='1' where ADDRESS= ?''', (mADDRESS,))
+    cursor = c.execute('''update http_history set finish='1' where address= ?''', (mADDRESS,))
     conn.commit()
     cursor.close()
     conn.close()
@@ -111,7 +118,7 @@ def DeleteSQL():
     if os.path.exists(SQLDATABASEFILE):
         conn = sqlite3.connect(SQLDATABASEFILE)
         c = conn.cursor()
-        cursor = c.execute("delete from httphistory where date('now', '-7 day') >= date(dDate)")  # 删除7日前的数据
+        cursor = c.execute("delete from http_history where date('now', '-7 day') >= date(dDate)")  # 删除7日前的数据
         conn.commit()
         cursor.close()
         conn.close()

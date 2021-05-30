@@ -56,7 +56,7 @@ def download_img(url, nyaa_list):
         Utils.count = +1
         with open(path + nyaa_list.file_name, 'wb') as g:
             g.write(img)
-            SQLUTILS.updateSQL_Download(nyaa_list.link)
+            SQLUTILS.updateSQL_Download(nyaa_list.address)
             SQLUTILS.insertSQL_file_history(nyaa_list)
 
     except:
@@ -171,10 +171,10 @@ def getBookCover(mSoup, nyaa_list):
                     Utils.download_img(b, nyaa_list)
                 # 不在抓取范围,结束抓取并记录
                 else:
-                    SQLUTILS.updateSQL_Download(nyaa_list.link)
+                    SQLUTILS.updateSQL_Download(nyaa_list.address)
 
         else:
-            SQLUTILS.updateSQL_Download(nyaa_list.link)
+            SQLUTILS.updateSQL_Download(nyaa_list.address)
 
 
 # 定义Request方法,request headers 和 proxy

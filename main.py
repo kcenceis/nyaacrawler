@@ -16,16 +16,17 @@ argvalue = sys.argv[1:]
 
 
 class nyaa_list:
+    address = ''
     title = ''
-    link = ''
     torrent = ''
     magnet = ''
+    category = ''
     file_name = ''
 
 
 def down(i):
-    r = Utils.getRequest("https://sukebei.nyaa.si" + i.link)
-    print("地址:" + i.link)
+    r = Utils.getRequest("https://sukebei.nyaa.si" + i.address)
+    print("地址:" + i.address)
     soup = BeautifulSoup(r.text, 'html.parser')
     Utils.getBookCover(soup, i)
 
@@ -97,13 +98,14 @@ book_list = []  # 创建集合
 # 获取<tr class='success'>中的所有内容
 for k in soup.find_all('tr', class_='success'):
     s = nyaa_list()
+    s.category = Utils.Directory
     for i in k.find_all('a'):
         if re.search(download_pattern, str(i)):
             s.torrent = i['href']
         if re.search(magnet_pattern, str(i)):
             s.magnet = i['href']
         if re.search(r'/view/', str(i)):
-            s.link = i['href']
+            s.address = i['href']
             s.title = i['title']
     book_list.append(s)
 
@@ -115,7 +117,7 @@ for k in soup.find_all('tr', class_='default'):
         if re.search(magnet_pattern, str(i)):
             s.magnet = i['href']
         if re.search(r'/view/', str(i)):
-            s.link = i['href']
+            s.address = i['href']
             s.title = i['title']
     book_list.append(s)
 
@@ -124,10 +126,10 @@ for i in book_list:
     # |_未完成
     #  |_数据库不存在该条目 则创建该条目 并下载
     #  |_数据库存在该条目 直接下载
-    if not SQLUTILS.isFinish(i.link):
+    if not SQLUTILS.isFinish(i.address):
         # 检查数据库是否已经有数据 没有则插入数据
-        if not SQLUTILS.HAS_SQL(i.link):
-            SQLUTILS.insertSQL(i.link)  # 插入数据库
+        if not SQLUTILS.HAS_SQL(i.address):
+            SQLUTILS.insertSQL(i.address)  # 插入数据库
             # 连接并获取网页内容（第二页）
             down(i)
         # 有数据则直接下载

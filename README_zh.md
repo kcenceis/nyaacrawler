@@ -41,7 +41,8 @@ Python version:3.7
 * doddbt.com
 * img.dlsite.jp
 * imagebam.com
-* i.imgur.com
+* imgur.com
+* caching.ovh
 </pre>
 
 ## 数据库设计

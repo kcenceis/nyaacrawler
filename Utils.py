@@ -7,13 +7,13 @@ from requests.adapters import HTTPAdapter
 import Utils
 from module import silverpic, hentaicovers, hentai4free, imgfrost, imagetwist, ukkit, ibb, imgtaxi
 
-proxyON = False  # 是否开启代理
+proxyON = True  # 是否开启代理
 filePath = os.path.split(os.path.realpath(__file__))[0]  # 获取脚本当前目录
 # socks代理规则
 proxies = {'http': 'socks5://127.0.0.1:1080',
            'https': 'socks5://127.0.0.1:1080'}
 # Requests hearder
-#headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+# headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
 #                         "Chrome/85.0.4183.83 Safari/537.36"}
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36",
@@ -49,8 +49,12 @@ def download_img(url, nyaa_list):
         img_format = re.findall('\.(jpg|bmp|png|jpeg|webz|gif)', url)
         response = mReq.get(url)
         img = response.content
-        count = +1
-        with open(path + nyaa_list.file_name + '.' + img_format[0], 'wb') as g:
+        if Utils.count > 1:
+            nyaa_list.file_name = validateTitle(nyaa_list.title) + str(Utils.count) + '.' + img_format[0]
+        else:
+            nyaa_list.file_name = validateTitle(nyaa_list.title) + '.' + img_format[0]
+        Utils.count = +1
+        with open(path + nyaa_list.file_name, 'wb') as g:
             g.write(img)
             SQLUTILS.updateSQL_Download(nyaa_list.link)
             SQLUTILS.insertSQL_file_history(nyaa_list)
@@ -82,7 +86,7 @@ def getBookCover(mSoup, nyaa_list):
         print(b)
         # b转换为str
         b = str(b)
-        count = 1
+        Utils.count = 1
         url = re.findall(https_pattern, b)
         if len(url) > 0:
             for b in url:
@@ -97,10 +101,6 @@ def getBookCover(mSoup, nyaa_list):
                 #            print("处理后的地址:{}".format(b))
                 str_b = str(b)
                 # 文件名定义
-                if count > 1:
-                    nyaa_list.file_name = validateTitle(nyaa_list.title) + str(count)
-                else:
-                    nyaa_list.file_name = validateTitle(nyaa_list.title)
 
                 # 只获取https://hentai-covers.site开头的网址
                 if re.search('https://hentai-covers.site', str_b):
@@ -165,7 +165,9 @@ def getBookCover(mSoup, nyaa_list):
                     Utils.download_img(b, nyaa_list)
                 elif re.search('imagebam.com', str_b):
                     Utils.download_img(b, nyaa_list)
-                elif re.search('^http[s]?://i.imgur.com/.*[jpg|bmp|png|jpeg|webz|gif]$', str_b):
+                elif re.search('^http[s]?://[\w\W]{0,2}imgur.com/.*[jpg|bmp|png|jpeg|webz|gif]$', str_b):
+                    Utils.download_img(b, nyaa_list)
+                elif re.search('^http[s]?://[\w\W]{0,7}caching.ovh/.*[jpg|bmp|png|jpeg|webz|gif]$', str_b):
                     Utils.download_img(b, nyaa_list)
                 # 不在抓取范围,结束抓取并记录
                 else:

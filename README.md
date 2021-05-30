@@ -43,7 +43,7 @@ Python version:3.7
 * doddbt.com
 * img.dlsite.jp
 * imagebam.com
-* i.imgur.com
+* caching.ovh
 </pre>
 
 ## Database_Design

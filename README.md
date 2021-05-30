@@ -1,4 +1,4 @@
-# nyaacatch
+# nyaacrawler
 
 抓取sukeibei.nyaa预览图
 
@@ -6,13 +6,15 @@ Python version:3.7
 
 ## Table of Contents
 
+- [List_of_web](#list_of_web)
+- [Database_Design](#database_design)
 - [Install](#install)
 - [Usage](#usage)
 - [Maintainer](#maintainer)
 - [License](#license)
 
 
-# 现可抓取网址
+## List_of_web
 <pre>
 * hentai-covers.site
 
@@ -42,7 +44,7 @@ Python version:3.7
 * i.imgur.com
 </pre>
 
-## 数据库结构
+## Database_Design
 SQLite: bookAddress.db
 
 <div style=" display:table-cell; float:left;">
@@ -141,7 +143,7 @@ pip install -r requirements.txt
 
 ## Usage
 
-开启socks代理方法:修改Utils.py中的proxyON为True
+Turn on Socks5: Utils.py→proxyON=True
 
 <div style="  display:table-cell; ">
 <table>

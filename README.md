@@ -66,12 +66,12 @@ file_history
 * 抓取Anime
   * python main.py 1
 * 抓取Doujinshi
-  * python main.py.py 2
+  * python main.py 2
 * 抓取Games
-  * python main.py.py 3
+  * python main.py 3
 * 抓取Manga
-  * python main.py.py 4
+  * python main.py 4
 * 抓取Picture
-  * python main.py.py 5
+  * python main.py 5
 * 抓取Photo
-  * python main.py.py 5
+  * python main.py 5

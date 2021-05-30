@@ -4,6 +4,8 @@ Crawl sukebei.nyaa Preview
 
 Python version:3.7
 
+[中文说明](README_zh.md)
+
 ## Table of Contents
 
 - [List_of_web](#list_of_web)
@@ -137,7 +139,7 @@ SQLite: bookAddress.db
 
 ## Install
 
-git clone https://github.com/kcenceis/nyaacatch.git
+git clone https://github.com/kcenceis/nyaacrawler.git
 
 pip install -r requirements.txt
 

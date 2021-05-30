@@ -4,10 +4,17 @@
 
 Python version:3.7
 
+## Table of Contents
+
+- [Install_Requirements](#install_requirements)
+- [Usage](#usage)
+- [Maintainer](#maintainer)
+- [License](#license)
+
+
 # 现可抓取网址
 <pre>
 * hentai-covers.site
-
 
 * hentai4free.net
 * imagetwist.com
@@ -34,17 +41,14 @@ Python version:3.7
 * imagebam.com
 * i.imgur.com
 </pre>
-## 安装依赖
-
-pip install -r requirements.txt
 
 ## 数据库结构
 SQLite: bookAddress.db
 
-<div style=" display:table-cell;">
+<div style=" display:table-cell; float:left;">
     <table>
         <tr>
-            <td colspan="4" style="text-align:center;">httphistory</td>
+            <td colspan="4" align="center">httphistory</td>
         </tr>
         <tr>
             <td>Column</td>
@@ -79,10 +83,10 @@ SQLite: bookAddress.db
     </table>
 </div>
 
-<div style="  display:table-cell;">
+<div style="  display:table-cell;float:left;">
     <table>
         <tr>
-            <td colspan="4" style="text-align:center;">file_history</td>
+            <td colspan="4" align="center">file_history</td>
         </tr>
         <tr>
             <td>Column</td>
@@ -129,8 +133,11 @@ SQLite: bookAddress.db
     </table>
 </div>
 
+## Install_Requirements
 
-## 使用方法
+pip install -r requirements.txt
+
+## Usage
 
 开启socks代理方法:修改Utils.py中的proxyON为True
 
@@ -166,3 +173,11 @@ SQLite: bookAddress.db
   </tr>
 </table>
 </div>
+
+## Maintainer
+
+[@kcenceis](https://github.com/kcenceis)
+
+## License
+
+[GPL](LICENSE)

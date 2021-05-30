@@ -5,8 +5,9 @@
 Python version:3.7
 
 # 现可抓取网址
-
+<pre>
 * hentai-covers.site
+
 
 * hentai4free.net
 * imagetwist.com
@@ -32,46 +33,136 @@ Python version:3.7
 * img.dlsite.jp
 * imagebam.com
 * i.imgur.com
-
+</pre>
 ## 安装依赖
 
 pip install -r requirements.txt
 
 ## 数据库结构
-<pre>
 SQLite: bookAddress.db
 
-TABLE:
-httphistory
-|----ID      自动ID
-|----ADDRESS 网页链接
-|----finish  下载完成
-|____dDate   写入数据库的时间
+<div style=" display:table-cell;">
+    <table>
+        <tr>
+            <td colspan="4" style="text-align:center;">httphistory</td>
+        </tr>
+        <tr>
+            <td>Column</td>
+            <td>SQL Type</td>
+            <td>Size</td>
+            <td>PK</td>
+        </tr>
+        <tr>
+            <td>ID</td>
+            <td>INTEGER</td>
+            <td></td>
+            <td>PK</td>
+        </tr>
+        <tr>
+            <td>ADDRESS</td>
+            <td>CHAR</td>
+            <td>50</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>finish</td>
+            <td>INT</td>
+            <td>4</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>dDate</td>
+            <td>TIMESTAMP</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+</div>
 
-TABLE:
-file_history
-|----ID       自动ID
-|----ADDRESS  网页链接
-|----TITLE    网页标题
-|----torrent  种子下载地址
-|----MAGNET   磁链下载地址
-|----file_name预览图文件名
-|____dDate    写入数据库的时间
-</pre>
+<div style="  display:table-cell;">
+    <table>
+        <tr>
+            <td colspan="4" style="text-align:center;">file_history</td>
+        </tr>
+        <tr>
+            <td>Column</td>
+            <td>SQL Type</td>
+            <td>Size</td>
+            <td>PK</td>
+        </tr>
+        <tr>
+            <td>ID</td>
+            <td>INTEGER</td>
+            <td></td>
+            <td>PK</td>
+        </tr>
+        <tr>
+            <td>ADDRESS</td>
+            <td>CHAR</td>
+            <td>50</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>TITLE</td>
+            <td>CHAR</td>
+            <td>200</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>torrent</td>
+            <td>CHAR</td>
+            <td>2000</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>MAGNET</td>
+            <td>CHAR</td>
+            <td>2000</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>dDate</td>
+            <td>TIMESTAMP</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+</div>
+
 
 ## 使用方法
 
 开启socks代理方法:修改Utils.py中的proxyON为True
 
-* 抓取Anime
-  * python main.py 1
-* 抓取Doujinshi
-  * python main.py 2
-* 抓取Games
-  * python main.py 3
-* 抓取Manga
-  * python main.py 4
-* 抓取Picture
-  * python main.py 5
-* 抓取Photo
-  * python main.py 5
+<div style="  display:table-cell; ">
+<table>
+  <tr>
+       <td></td>
+       <td>Command</td>
+  </tr>
+  <tr>
+       <td>Anime</td>
+       <td>python main.py 1</td>
+  </tr>
+  <tr>
+       <td>Doujinshi</td>
+       <td>python main.py 2</td>
+  </tr>
+  <tr>
+       <td>Games</td>
+       <td>python main.py 3</td>
+  </tr>
+  <tr>
+       <td>Manga</td>
+       <td>python main.py 4</td>
+  </tr>
+  <tr>
+       <td>Picture</td>
+       <td>python main.py 5</td>
+  </tr>
+  <tr>
+       <td>Photo</td>
+       <td>python main.py 6</td>
+  </tr>
+</table>
+</div>

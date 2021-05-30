@@ -1,10 +1,19 @@
-# nyaacatch
+# nyaacrawler
 
 抓取sukeibei.nyaa预览图
 
 Python version:3.7
 
-# 现可抓取网址
+## 内容
+
+- [现可抓取网址](#现可抓取网址)
+- [数据库设计](#数据库设计)
+- [安装](#安装)
+- [使用方法](#使用方法)
+- [维护人](#维护人)
+- [许可](#许可)
+
+## 现可抓取网址
 <pre>
 * hentai-covers.site
 
@@ -34,11 +43,8 @@ Python version:3.7
 * imagebam.com
 * i.imgur.com
 </pre>
-## 安装依赖
 
-pip install -r requirements.txt
-
-## 数据库结构
+## 数据库设计
 SQLite: bookAddress.db
 
 <div style=" display:table-cell;">
@@ -129,6 +135,11 @@ SQLite: bookAddress.db
     </table>
 </div>
 
+## 安装
+
+git clone https://github.com/kcenceis/nyaacrawler.git
+
+pip install -r requirements.txt
 
 ## 使用方法
 
@@ -166,3 +177,11 @@ SQLite: bookAddress.db
   </tr>
 </table>
 </div>
+
+## 维护人
+
+[@kcenceis](https://github.com/kcenceis)
+
+## 许可
+
+[GNU General Public License v3.0](LICENSE)

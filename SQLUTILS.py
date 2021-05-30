@@ -23,6 +23,7 @@ def connSQL():
         TITLE          CHAR(200),
         torrent        CHAR(2000),
         MAGNET         CHAR(2000),
+        file_name         CHAR(2000),
         dDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );''')
         # 插入数据表
@@ -44,8 +45,8 @@ def insertSQL(mAddress):
 def insertSQL_file_history(nyaa_list):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
-    c.execute("INSERT INTO file_history (ADDRESS,TITLE,torrent,MAGNET) \
-      VALUES (?,?,?,?)", (nyaa_list.link,nyaa_list.title,nyaa_list.torrent,nyaa_list.magnet,))
+    c.execute("INSERT INTO file_history (ADDRESS,TITLE,torrent,MAGNET,file_name) \
+      VALUES (?,?,?,?,?)", (nyaa_list.link,nyaa_list.title,nyaa_list.torrent,nyaa_list.magnet,nyaa_list.file_name,))
     conn.commit()
     c.close()
     conn.close()

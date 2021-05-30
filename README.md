@@ -6,11 +6,32 @@ Python version:3.7
 
 # 现可抓取网址
 
-* hentaicovers
-* hentai4free
-* imagetwist
-* imgfrost
-* imgblaze
+* hentai-covers.site
+
+* hentai4free.net
+* imagetwist.com
+
+* imgfrost.net
+* imgblaze.net
+
+* ibb.co
+
+* imgtaxi.com
+* imgadult.com
+
+* silverpic.com
+* imgbaron.com
+* pics4you.net
+* picdollar.com
+* premalo.com
+
+* ehgt.org
+* skviap.xyz
+* bvmqkla.de
+* doddbt.com
+* img.dlsite.jp
+* imagebam.com
+* i.imgur.com
 
 ## 安装依赖
 
@@ -20,9 +41,15 @@ pip install -r requirements.txt
 
 开启socks代理方法:修改Utils.py中的proxyON为True
 
-* 抓取Donjinshi
-  * python nyaacatch.py 1
+* 抓取Anime
+  * python main.py 1
+* 抓取Doujinshi
+  * python main.py.py 2
+* 抓取Games
+  * python main.py.py 3
 * 抓取Manga
-  * python nyaacatch.py 2
+  * python main.py.py 4
 * 抓取Picture
-  * python nyaacatch.py 3
+  * python main.py.py 5
+* 抓取Photo
+  * python main.py.py 5

@@ -1,6 +1,6 @@
 # nyaacrawler
 
-抓取sukeibei.nyaa预览图
+Crawl sukebei.nyaa Preview
 
 Python version:3.7
 

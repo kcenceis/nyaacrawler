@@ -6,7 +6,7 @@ Python version:3.7
 
 ## Table of Contents
 
-- [Install_Requirements](#install_requirements)
+- [Install](#install)
 - [Usage](#usage)
 - [Maintainer](#maintainer)
 - [License](#license)
@@ -133,7 +133,9 @@ SQLite: bookAddress.db
     </table>
 </div>
 
-## Install_Requirements
+## Install
+
+git clone https://github.com/kcenceis/nyaacatch.git
 
 pip install -r requirements.txt
 

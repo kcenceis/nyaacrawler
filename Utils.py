@@ -46,7 +46,7 @@ def download_img(url, nyaa_list):
     if not os.path.exists(path):
         os.mkdir(path)
     try:
-        img_format = re.findall('\.(jpg|bmp|png|jpeg|webz|gif)', url)
+        img_format = re.findall('\.(jpg|bmp|png|jpeg|webp|gif)', url)
         response = mReq.get(url)
         img = response.content
         if Utils.count > 1:
@@ -96,7 +96,7 @@ def getBookCover(mSoup, nyaa_list):
                 #           b = re.findall(torrent_img_pattern, b)
                 #           print("处理后的地址:{}".format(b))
                 #    for z in b:
-                #        if re.search('(.*).(html|jpg|gif|png|bmp|webz|jpeg)', z):
+                #        if re.search('(.*).(html|jpg|gif|png|bmp|webp|jpeg)', z):
                 #            b = z
                 #            print("处理后的地址:{}".format(b))
                 str_b = str(b)
@@ -142,7 +142,7 @@ def getBookCover(mSoup, nyaa_list):
                     silverpic.get_image(b, nyaa_list)
 
 
-                elif re.search('^http[s]?://ehgt.org.*[jpg|bmp|png|jpeg|webz|gif]$', str_b):
+                elif re.search('^http[s]?://ehgt.org.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
                     Utils.download_img(b, nyaa_list)
 
 
@@ -154,20 +154,20 @@ def getBookCover(mSoup, nyaa_list):
                 #  elif re.search('^http[s]?://doddbt.com/v/.*$', str_b):
                 #      ukkit.get_image(b, nyaa_list)
 
-                elif re.search('^http[s]?://skviap.xyz.*[jpg|bmp|png|jpeg|webz|gif]$', str_b):
+                elif re.search('^http[s]?://skviap.xyz.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
                     Utils.download_img(b, nyaa_list)
-                elif re.search('^http[s]?://bvmqkla.de.*[jpg|bmp|png|jpeg|webz|gif]$', str_b):
+                elif re.search('^http[s]?://bvmqkla.de.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
                     Utils.download_img(b, nyaa_list)
-                elif re.search('^http[s]?://doddbt.com.*[jpg|bmp|png|jpeg|webz|gif]$', str_b):
+                elif re.search('^http[s]?://doddbt.com.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
                     Utils.download_img(b, nyaa_list)
 
-                elif re.search('^http[s]?://img.dlsite.jp/.*[jpg|bmp|png|jpeg|webz|gif]$', str_b):
+                elif re.search('^http[s]?://img.dlsite.jp/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
                     Utils.download_img(b, nyaa_list)
                 elif re.search('imagebam.com', str_b):
                     Utils.download_img(b, nyaa_list)
-                elif re.search('^http[s]?://[\w\W]{0,2}imgur.com/.*[jpg|bmp|png|jpeg|webz|gif]$', str_b):
+                elif re.search('^http[s]?://[\w\W]{0,2}imgur.com/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
                     Utils.download_img(b, nyaa_list)
-                elif re.search('^http[s]?://[\w\W]{0,7}caching.ovh/.*[jpg|bmp|png|jpeg|webz|gif]$', str_b):
+                elif re.search('^http[s]?://[\w\W]{0,7}caching.ovh/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
                     Utils.download_img(b, nyaa_list)
                 # 不在抓取范围,结束抓取并记录
                 else:

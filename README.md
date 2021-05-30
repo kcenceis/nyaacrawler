@@ -57,7 +57,7 @@ file_history
 |----MAGNET   磁链下载地址
 |----file_name预览图文件名
 |____dDate    写入数据库的时间
-</pre
+</pre>
 
 ## 使用方法
 

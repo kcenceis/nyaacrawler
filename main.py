@@ -25,6 +25,21 @@ class nyaa_list:
     count = 0
 
 
+# 生成nyaa_list 抓取 sukeibe.nyaa 目录 中的 链接 标题 磁链 种子
+def init_nyaalist(soup):
+    s = nyaa_list()
+    s.category = file_category
+    for i in soup.find_all('a'):
+        if re.search(download_pattern, str(i)):
+            s.torrent = i['href']
+        if re.search(magnet_pattern, str(i)):
+            s.magnet = i['href']
+        if re.search(r'/view/', str(i)):
+            s.address = i['href']
+            s.title = i['title']
+    return s
+
+
 if __name__ == '__main__':
     if len(argvalue) != 0:
         if argvalue[0] == "1":
@@ -91,30 +106,11 @@ if __name__ == '__main__':
     book_list = []  # 创建集合
     # 获取<tr class='success'>中的所有内容
     for k in soup.find_all('tr', class_='success'):
-        s = nyaa_list()
-        s.category = file_category
-        for i in k.find_all('a'):
-            if re.search(download_pattern, str(i)):
-                s.torrent = i['href']
-            if re.search(magnet_pattern, str(i)):
-                s.magnet = i['href']
-            if re.search(r'/view/', str(i)):
-                s.address = i['href']
-                s.title = i['title']
-        book_list.append(s)
+        book_list.append(init_nyaalist(k))
 
     # 获取<tr class='default'>中的所有内容
     for k in soup.find_all('tr', class_='default'):
-        s = nyaa_list()
-        for i in k.find_all('a'):
-            if re.search(download_pattern, str(i)):
-                s.torrent = i['href']
-            if re.search(magnet_pattern, str(i)):
-                s.magnet = i['href']
-            if re.search(r'/view/', str(i)):
-                s.address = i['href']
-                s.title = i['title']
-        book_list.append(s)
+        book_list.append(init_nyaalist(k))
 
     for i in book_list:
         # 检查是否已经下载完成

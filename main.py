@@ -29,16 +29,22 @@ if __name__ == '__main__':
     if len(argvalue) != 0:
         if argvalue[0] == "1":
             url = url_Art_Anime
+            file_category = 'Anime'
         elif argvalue[0] == '2':
             url = url_Art_Doujinshi
+            file_category = 'Doujinshi'
         elif argvalue[0] == '3':
             url = url_Art_Games
+            file_category = 'Games'
         elif argvalue[0] == '4':
             url = url_Art_Manga
+            file_category = 'Manga'
         elif argvalue[0] == '5':
             url = url_Art_Picture
+            file_category = 'Picture'
         elif argvalue[0] == '6':
             url = url_Real_Life_Photo
+            file_category = 'Real_Life_Photo'
         else:
             print('退出程序')
             sys.exit()
@@ -55,23 +61,28 @@ if __name__ == '__main__':
 
         if urlChoose == '1':
             url = url_Art_Anime
+            file_category = 'Anime'
         elif urlChoose == '2':
             url = url_Art_Doujinshi
+            file_category = 'Doujinshi'
         elif urlChoose == '3':
             url = url_Art_Games
+            file_category = 'Games'
         elif urlChoose == '4':
             url = url_Art_Manga
+            file_category = 'Manga'
         elif urlChoose == '5':
             url = url_Art_Picture
+            file_category = 'Picture'
         elif urlChoose == '6':
             url = url_Real_Life_Photo
+            file_category = 'Real_Life_Photo'
         else:
             print('退出程序')
             sys.exit()
     SQLUTILS.connSQL()  # 检查是否存在数据库
     SQLUTILS.DeleteSQL()  # 清除旧数据
     r = Utils.getRequest(url)  # 请求第一个页面
-
     soup = BeautifulSoup(r.text, 'html.parser')
 
     download_pattern = re.compile(r'/download/(?:[0-9])+.torrent')  # 种子pattern
@@ -81,7 +92,7 @@ if __name__ == '__main__':
     # 获取<tr class='success'>中的所有内容
     for k in soup.find_all('tr', class_='success'):
         s = nyaa_list()
-        s.category = Utils.Directory
+        s.category = file_category
         for i in k.find_all('a'):
             if re.search(download_pattern, str(i)):
                 s.torrent = i['href']

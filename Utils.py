@@ -38,17 +38,19 @@ def download_img(url, nyaa_list):
         os.mkdir(path)
     try:
         img_format = re.findall('\.(jpg|bmp|png|jpeg|webp|gif)', url)
-        response = mReq.get(url)
-        img = response.content
         nyaa_list.count += 1
         if nyaa_list.count > 1:
             nyaa_list.file_name = validateTitle(nyaa_list.title) + str(nyaa_list.count) + '.' + img_format[0]
         else:
             nyaa_list.file_name = validateTitle(nyaa_list.title) + '.' + img_format[0]
-        with open(path + nyaa_list.file_name, 'wb') as g:
-            g.write(img)
-            SQLUTILS.updateSQL_Download(nyaa_list.address)
-            SQLUTILS.insertSQL_file_history(nyaa_list)
+        # 检查file_history中是否已经存在该文件名 不存在则进行下载
+        if not SQLUTILS.isFinish_file_history(nyaa_list):
+               response = mReq.get(url)
+               img = response.content
+               with open(path + nyaa_list.file_name, 'wb') as g:
+                   g.write(img)
+                   SQLUTILS.updateSQL_Download(nyaa_list.address)
+                   SQLUTILS.insertSQL_file_history(nyaa_list)
 
     except:
         pass

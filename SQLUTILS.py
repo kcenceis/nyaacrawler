@@ -88,6 +88,22 @@ def isFinish(mAddress):
         return False
 
 
+# 获取有多少相同的地址，返回bool
+def isFinish_file_history(nyaa_list):
+    conn = sqlite3.connect(SQLDATABASEFILE)
+    c = conn.cursor()
+    # 查询数据
+    cursor = c.execute("SELECT count(*) as count  from file_history where file_name = ?", (nyaa_list.file_name,))
+    # values = cursor.fetchone()
+    result = cursor.fetchone()[0]
+    cursor.close()
+    conn.close()
+    if result == 1:
+        return True
+    else:
+        return False
+
+
 # 获取count，查看是否存在相同条目，返回bool
 def HAS_SQL(mAddress):
     conn = sqlite3.connect(SQLDATABASEFILE)

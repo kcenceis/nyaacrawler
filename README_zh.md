@@ -2,7 +2,7 @@
 
 抓取sukeibei.nyaa预览图
 
-Python version:3.7
+Python version:3.9
 
 ## 内容
 

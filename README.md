@@ -2,7 +2,7 @@
 
 Crawl sukebei.nyaa Preview
 
-Python version:3.7
+Python version:3.9
 
 [中文说明](README_zh.md)
 

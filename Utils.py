@@ -1,4 +1,6 @@
 import requests
+from bs4 import BeautifulSoup
+
 import SQLUTILS
 import re
 import os
@@ -12,9 +14,6 @@ filePath = os.path.split(os.path.realpath(__file__))[0]  # 获取脚本当前目
 # socks代理规则
 proxies = {'http': 'socks5://127.0.0.1:1080',
            'https': 'socks5://127.0.0.1:1080'}
-# Requests hearder
-# headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-#                         "Chrome/85.0.4183.83 Safari/537.36"}
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36",
     "Content-Type": "application/x-www-form-urlencoded",
@@ -28,32 +27,24 @@ headers = {
 mReq = requests.session()
 mReq.mount('https://', HTTPAdapter(max_retries=5))
 mReq.mount('http://', HTTPAdapter(max_retries=5))
-# https_pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')  # 匹配模式
 https_pattern = '(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Za-z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Za-z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Za-z0-9+&@#/%=~_|$?!:,.]*\)|[A-Za-z0-9+&@#/%=~_|$])'
-# https_pattern = '(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Za-z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Za-z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Za-z0-9+&@#/%=~_|$?!:,.]*\)|[\u0000-\uFFFF]+|[A-Za-z0-9+&@#/%=~_|$])'
-# torrent_img_pattern = '\]\((.+?)\)'
-torrent_img_pattern = "http[s]?://(?:[a-zA-Z0-9]|[./])+"
-count = 1
 
 
-def __init__(self):
-    self._Directory = self
-
-
-# url,标题
+# 进行下载图片 并且记录到数据库
+# 图片的链接,nyaa_list
 def download_img(url, nyaa_list):
-    path = filePath + os.sep + Directory + os.sep
+    path = filePath + os.sep + nyaa_list.category + os.sep
     if not os.path.exists(path):
         os.mkdir(path)
     try:
         img_format = re.findall('\.(jpg|bmp|png|jpeg|webp|gif)', url)
         response = mReq.get(url)
         img = response.content
-        if Utils.count > 1:
-            nyaa_list.file_name = validateTitle(nyaa_list.title) + str(Utils.count) + '.' + img_format[0]
+        nyaa_list.count += 1
+        if nyaa_list.count > 1:
+            nyaa_list.file_name = validateTitle(nyaa_list.title) + str(nyaa_list.count) + '.' + img_format[0]
         else:
             nyaa_list.file_name = validateTitle(nyaa_list.title) + '.' + img_format[0]
-        Utils.count = +1
         with open(path + nyaa_list.file_name, 'wb') as g:
             g.write(img)
             SQLUTILS.updateSQL_Download(nyaa_list.address)
@@ -63,42 +54,28 @@ def download_img(url, nyaa_list):
         pass
 
 
-@property
-def Directory(self):
-    return self._Directory
+# 连接并获取网页内容（第二页 即/view/111XXXX）
+# 传入nyaa_list
+def down(nyaa_list):
+    r = Utils.getRequest("https://sukebei.nyaa.si" + nyaa_list.address)
+    print("地址:" + nyaa_list.address)
+    soup = BeautifulSoup(r.text, 'html.parser')
+    Utils.getBookCover(soup, nyaa_list)
 
 
-@Directory.setter
-def Directory(self, value):
-    self._Directory = value
-
-
-# 获取图片封面地址(第三页面)
-# mSoup,第一页面提供的href
-# mCount Title的列表位置
-# mBoookTitle 第一页面所有Title(列表)
-# 获取图片
+# 抓取图片封面地址 分析是何种图片网站 使用模块 下载图片
+# mSoup,第二页的网站内容
+# nyaa_list
 def getBookCover(mSoup, nyaa_list):
     for stringSoup in mSoup.find_all('div', id='torrent-description'):
-        # 获取预览图地址
         b = stringSoup.string  # 获取网页文中字段
-
         print(b)
         # b转换为str
         b = str(b)
-        Utils.count = 1
         url = re.findall(https_pattern, b)
         if len(url) > 0:
             for b in url:
                 print("未处理的地址:{}".format(b))
-                # 处理（https://aaaaa.com/XXX）带括号格式的地址
-                #       if re.search(torrent_img_pattern, b):
-                #           b = re.findall(torrent_img_pattern, b)
-                #           print("处理后的地址:{}".format(b))
-                #    for z in b:
-                #        if re.search('(.*).(html|jpg|gif|png|bmp|webp|jpeg)', z):
-                #            b = z
-                #            print("处理后的地址:{}".format(b))
                 str_b = str(b)
                 # 文件名定义
 
@@ -188,6 +165,7 @@ def getRequest(http_url):
     return r
 
 
+# 将不能作为文件名的字符替换为下划线
 def validateTitle(title):
     rstr = r"[\/\\\:\*\?\"\<\>\|]"  # '/ \ : * ? " < > |'
     new_title = re.sub(rstr, "_", title)  # 替换为下划线

@@ -4,12 +4,28 @@ import os
 SQLDATABASEFILE = os.path.split(os.path.realpath(__file__))[0] + os.sep + 'bookAddress.db'  # 数据库文件名称
 
 
-def connSQL():
-    if not os.path.exists(SQLDATABASEFILE):  # 检查是否存在表
-        conn = sqlite3.connect(SQLDATABASEFILE)
-        print('Opened database successfully');
-        c = conn.cursor()
+# 传入数据表名称检查是否存在 返回True False
+# param: 数据表名称
+def check_table(table_name):
+    conn = sqlite3.connect(SQLDATABASEFILE)
+    c = conn.cursor()
+    # 查询数据
+    cursor = c.execute("select count(*) from sqlite_master where name=? ", (table_name,))
+    # values = cursor.fetchone()
+    result = cursor.fetchone()[0]
+    cursor.close()
+    conn.close()
+    if result == 1:
+        return True
+    else:
+        return False
 
+
+# 初始化SQLite数据库文件
+def connSQL():
+    if not check_table('http_history'):
+        conn = sqlite3.connect(SQLDATABASEFILE)
+        c = conn.cursor()
         # 执行创建表
         c.execute('''CREATE TABLE http_history                      
        (id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -17,19 +33,23 @@ def connSQL():
        finish         INT(4),
        dDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
        );''')
-        c.execute('''CREATE TABLE file_history                      
-        (id INTEGER PRIMARY KEY AUTOINCREMENT,
-        address        CHAR(50),
-        title          CHAR(200),
-        torrent        CHAR(2000),
-        magnet         CHAR(2000),
-        category       CHAR(2000),
-        file_name      CHAR(2000),
-        dDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );''')
-        # 插入数据表
         conn.commit()
-        c.close()
+        conn.close()
+    if not check_table('file_history'):
+        conn = sqlite3.connect(SQLDATABASEFILE)
+        c = conn.cursor()
+        # 执行创建表
+        c.execute('''CREATE TABLE file_history                      
+       (id INTEGER PRIMARY KEY AUTOINCREMENT,
+       address        CHAR(50),
+       title          CHAR(200),
+       torrent        CHAR(2000),
+       magnet         CHAR(2000),
+       category       CHAR(2000),
+       file_name      CHAR(2000),
+       dDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+       );''')
+        conn.commit()
         conn.close()
 
 

@@ -1,13 +1,11 @@
+import os
+import re
 import requests
 from bs4 import BeautifulSoup
-
-import SQLUTILS
-import re
-import os
 from requests.adapters import HTTPAdapter
 
-import Utils
-from module import silverpic, hentaicovers, hentai4free, imgfrost, imagetwist, ukkit, ibb, imgtaxi
+import SQLUTILS
+from module import silverpic, hentaicovers, hentai4free, imgfrost, imagetwist, ibb, imgtaxi
 
 proxyON = False  # 是否开启代理
 filePath = os.path.split(os.path.realpath(__file__))[0]  # 获取脚本当前目录
@@ -60,10 +58,10 @@ def download_img(url, nyaa_list):
 # 连接并获取网页内容（第二页 即/view/111XXXX）
 # 传入nyaa_list
 def down(nyaa_list):
-    r = Utils.getRequest("https://sukebei.nyaa.si" + nyaa_list.address)
+    r = getRequest("https://sukebei.nyaa.si" + nyaa_list.address)
     print("地址:" + nyaa_list.address)
     soup = BeautifulSoup(r.text, 'html.parser')
-    Utils.getBookCover(soup, nyaa_list)
+    getBookCover(soup, nyaa_list)
 
 
 # 抓取图片封面地址 分析是何种图片网站 使用模块 下载图片
@@ -123,7 +121,7 @@ def getBookCover(mSoup, nyaa_list):
 
 
                 elif re.search('^http[s]?://ehgt.org.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
-                    Utils.download_img(b, nyaa_list)
+                    download_img(b, nyaa_list)
 
 
                 # ukkit
@@ -135,20 +133,20 @@ def getBookCover(mSoup, nyaa_list):
                 #      ukkit.get_image(b, nyaa_list)
 
                 elif re.search('^http[s]?://skviap.xyz.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
-                    Utils.download_img(b, nyaa_list)
+                    download_img(b, nyaa_list)
                 elif re.search('^http[s]?://bvmqkla.de.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
-                    Utils.download_img(b, nyaa_list)
+                    download_img(b, nyaa_list)
                 elif re.search('^http[s]?://doddbt.com.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
-                    Utils.download_img(b, nyaa_list)
+                    download_img(b, nyaa_list)
 
                 elif re.search('^http[s]?://img.dlsite.jp/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
-                    Utils.download_img(b, nyaa_list)
+                    download_img(b, nyaa_list)
                 elif re.search('imagebam.com', str_b):
-                    Utils.download_img(b, nyaa_list)
+                    download_img(b, nyaa_list)
                 elif re.search('^http[s]?://[\w\W]{0,2}imgur.com/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
-                    Utils.download_img(b, nyaa_list)
+                    download_img(b, nyaa_list)
                 elif re.search('^http[s]?://[\w\W]{0,7}caching.ovh/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
-                    Utils.download_img(b, nyaa_list)
+                    download_img(b, nyaa_list)
                 # 不在抓取范围,结束抓取并记录
                 else:
                     SQLUTILS.updateSQL_Download(nyaa_list.address)

@@ -149,12 +149,12 @@ def updateSQL_Download(mADDRESS):
     conn.close()
 
 
-# 删除7日前的数据
+# 删除180日前的数据
 def DeleteSQL():
     if os.path.exists(SQLDATABASEFILE):
         conn = sqlite3.connect(SQLDATABASEFILE)
         c = conn.cursor()
-        cursor = c.execute("delete from http_history where date('now', '-7 day') >= date(dDate)")  # 删除7日前的数据
+        cursor = c.execute("delete from http_history where date('now', '-180 day') >= date(dDate)")  # 删除180日之前的数据
         conn.commit()
         cursor.close()
         conn.close()

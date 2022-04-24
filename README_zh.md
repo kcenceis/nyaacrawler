@@ -43,6 +43,7 @@ Python version:3.9
 * imagebam.com
 * imgur.com
 * caching.ovh
+* turboimg.net
 </pre>
 
 ## 数据库设计

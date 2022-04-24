@@ -44,6 +44,7 @@ Python version:3.9
 * img.dlsite.jp
 * imagebam.com
 * caching.ovh
+* turboimg.net
 </pre>
 
 ## Database_Design

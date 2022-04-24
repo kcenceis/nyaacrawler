@@ -35,7 +35,7 @@ def init_nyaalist(soup):
         if re.search(magnet_pattern, str(i)):
             s.magnet = i['href']
         if re.search(r'/view/', str(i)):
-            s.address = i['href']
+            s.address = Nyaa_DOMAIN + i['href']
             s.title = i['title']
     return s
 

@@ -1,5 +1,6 @@
 import os
 import re
+
 import requests
 from bs4 import BeautifulSoup
 from requests.adapters import HTTPAdapter
@@ -58,7 +59,7 @@ def download_img(url, nyaa_list):
 # 连接并获取网页内容（第二页 即/view/111XXXX）
 # 传入nyaa_list
 def down(nyaa_list):
-    r = getRequest("https://sukebei.nyaa.si" + nyaa_list.address)
+    r = getRequest(nyaa_list.address)
     print("地址:" + nyaa_list.address)
     soup = BeautifulSoup(r.text, 'html.parser')
     getBookCover(soup, nyaa_list)
@@ -76,7 +77,7 @@ def getBookCover(mSoup, nyaa_list):
         url = re.findall(https_pattern, b)
         if len(url) > 0:
             for b in url:
-                print("未处理的地址:{}".format(b))
+                print("未处理的地址:{}".format(b))  # 抓取到的地址 将要进行抓取的网址
                 str_b = str(b)
                 # 文件名定义
 
@@ -87,7 +88,7 @@ def getBookCover(mSoup, nyaa_list):
                 # b=图片url,mBookTitle[mCount]=图片标题,count=第几张图片,len(url)=url总数
                 elif re.search('https://hentai4free.net', str_b):
                     hentai4free.getImageURL(b, nyaa_list)
-                # 只获取https://imagetwist.com开头的网址6
+                # 只获取https://imagetwist.com开头的网址
                 elif re.search('https://imagetwist.com', str_b):
                     imagetwist.getImageURL(b, nyaa_list)
 
@@ -143,10 +144,14 @@ def getBookCover(mSoup, nyaa_list):
                     download_img(b, nyaa_list)
                 elif re.search('imagebam.com', str_b):
                     download_img(b, nyaa_list)
-                elif re.search('^http[s]?://[\w\W]{0,2}imgur.com/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
+                elif re.search('^http[s]?://[\w\W]{0,2}imgur\.com/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
                     download_img(b, nyaa_list)
-                elif re.search('^http[s]?://[\w\W]{0,7}caching.ovh/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
+                elif re.search('^http[s]?://[\w\W]{0,7}caching\.ovh/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
                     download_img(b, nyaa_list)
+
+                elif re.search('^http[s]?://[\w\W]{0,7}turboimg\.net/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
+                    download_img(b, nyaa_list)
+
                 # 不在抓取范围,结束抓取并记录
                 else:
                     SQLUTILS.updateSQL_Download(nyaa_list.address)

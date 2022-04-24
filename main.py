@@ -31,7 +31,7 @@ def init_nyaalist(soup):
     s.category = file_category
     for i in soup.find_all('a'):
         if re.search(download_pattern, str(i)):
-            s.torrent = i['href']
+            s.torrent = Nyaa_DOMAIN + i['href']
         if re.search(magnet_pattern, str(i)):
             s.magnet = i['href']
         if re.search(r'/view/', str(i)):
@@ -103,7 +103,7 @@ if __name__ == '__main__':
     download_pattern = re.compile(r'/download/(?:[0-9])+.torrent')  # 种子pattern
     magnet_pattern = re.compile(r'magnet:\?xt=urn:btih:')  # 磁链pattern
 
-    book_list = []  # 创建集合
+    book_list = []  # 创建集合2
     # 获取<tr class='success'>中的所有内容
     for k in soup.find_all('tr', class_='success'):
         book_list.append(init_nyaalist(k))

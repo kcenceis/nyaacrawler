@@ -30,12 +30,15 @@ Python version:3.9
 
 * imgtaxi.com
 * imgadult.com
+* imgdrive.net
 
 * silverpic.com
 * imgbaron.com
 * pics4you.net
 * picdollar.com
 * premalo.com
+* fotokiz.com
+* imgsen.com
 
 * ehgt.org
 * skviap.xyz

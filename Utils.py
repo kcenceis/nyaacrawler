@@ -102,9 +102,12 @@ def getBookCover(mSoup, nyaa_list):
                     ibb.get_image(b, nyaa_list)
 
                 # imgtaxi.com imgadult.com
+                # small 改成 big 类的图站
                 elif re.search('^http[s]?://imgtaxi.com/.*.html$', str_b):
                     imgtaxi.get_image(b, nyaa_list)
                 elif re.search('^http[s]?://imgadult.com/.*.html$', str_b):
+                    imgtaxi.get_image(b, nyaa_list)
+                elif re.search('^http[s]?://imgdrive.net/.*.html$', str_b):
                     imgtaxi.get_image(b, nyaa_list)
 
                 # silverpic.com imgbaron.com pics4you.net picdollar.com premalo.com
@@ -118,6 +121,10 @@ def getBookCover(mSoup, nyaa_list):
                 elif re.search('^http[s]?://picdollar.com/.*.html$', str_b):
                     silverpic.get_image(b, nyaa_list)
                 elif re.search('^http[s]?://premalo.com/.*.html$', str_b):
+                    silverpic.get_image(b, nyaa_list)
+                elif re.search('^http[s]?://fotokiz.com/.*.html$', str_b):
+                    silverpic.get_image(b, nyaa_list)
+                elif re.search('^http[s]?://imgsen.com/.*.html$', str_b):
                     silverpic.get_image(b, nyaa_list)
 
 

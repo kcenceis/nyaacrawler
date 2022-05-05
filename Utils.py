@@ -6,22 +6,24 @@ from bs4 import BeautifulSoup
 from requests.adapters import HTTPAdapter
 
 import SQLUTILS
-from module import silverpic, hentaicovers, hentai4free, imgfrost, imagetwist, ibb, imgtaxi
+from module import silverpic, hentaicovers, hentai4free, imgfrost, imagetwist, ibb, imgtaxi, pixxxels
 
-proxyON = False  # 是否开启代理
+proxyON = True  # 是否开启代理
 filePath = os.path.split(os.path.realpath(__file__))[0]  # 获取脚本当前目录
 # socks代理规则
 proxies = {'http': 'socks5://127.0.0.1:1080',
            'https': 'socks5://127.0.0.1:1080'}
-headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36",
-    "Content-Type": "application/x-www-form-urlencoded",
-    "dnt": "1",
-    'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="90", "Google Chrome";v="90"',
-    'sec-fetch-site': 'same-origin',
-    'sec-fetch-dest': 'document',
-    'upgrade-insecure-requests': '1'
-}
+
+headers = {}
+headers['User-Agent'] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " \
+                        "Chrome/90.0.4430.93 Safari/537.36 "
+headers['Content-Type'] = "application/x-www-form-urlencoded"
+headers['dnt'] = "1"
+headers['sec-ch-ua'] = '" Not A;Brand";v="99", "Chromium";v="90", "Google Chrome";v="90"'
+headers['sec-fetch-site'] = 'same-origin'
+headers['sec-fetch-dest'] = 'document'
+headers['upgrade-insecure-requests'] = '1'
+
 
 mReq = requests.session()
 mReq.mount('https://', HTTPAdapter(max_retries=5))
@@ -37,14 +39,16 @@ def download_img(url, nyaa_list):
         os.mkdir(path)
     try:
         img_format = re.findall('\.(jpg|bmp|png|jpeg|webp|gif)', url)
+
         nyaa_list.count += 1
         if nyaa_list.count > 1:
             nyaa_list.file_name = validateTitle(nyaa_list.title) + str(nyaa_list.count) + '.' + img_format[0]
         else:
             nyaa_list.file_name = validateTitle(nyaa_list.title) + '.' + img_format[0]
+
         # 检查file_history中是否已经存在该文件名 不存在则进行下载
         if not SQLUTILS.isFinish_file_history(nyaa_list):
-            response = mReq.get(url)
+            response = mReq.get(url,headers=headers)
             img = response.content
             with open(path + nyaa_list.file_name, 'wb') as g:
                 g.write(img)
@@ -159,6 +163,14 @@ def getBookCover(mSoup, nyaa_list):
                 elif re.search('^http[s]?://[\w\W]{0,7}turboimg\.net/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
                     download_img(b, nyaa_list)
 
+                # 2022/5/5新增
+                elif re.search('http[s]?://pixxxels.cc/', str_b):
+                    pixxxels.getImageURL(b, nyaa_list)
+
+                elif re.search('^http[s]?://[\w\W]{0,7}ax21pics.net/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
+                    download_img(b, nyaa_list)
+                elif re.search('^http[s]?://[\w\W]{0,7}catbox\.moe/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
+                    download_img(b, nyaa_list)
                 # 不在抓取范围,结束抓取并记录
                 else:
                     SQLUTILS.updateSQL_Download(nyaa_list.address)

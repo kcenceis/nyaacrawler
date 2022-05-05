@@ -11,7 +11,8 @@ url_Art_Doujinshi = Nyaa_DOMAIN + "/?f=0&c=1_2&q="  # 同人志
 url_Art_Games = Nyaa_DOMAIN + "/?f=0&c=1_3&q="  # 游戏
 url_Art_Manga = Nyaa_DOMAIN + '/?f=0&c=1_4&q='  # 漫画
 url_Art_Picture = Nyaa_DOMAIN + '/?f=0&c=1_5&q='  # 图片
-url_Real_Life_Photo = Nyaa_DOMAIN + '/?c=2_1'  # Real_Life - Photobooks and Pictures
+url_Real_Life_Photo = Nyaa_DOMAIN + '?f=0&c=2_1&q='  # Real_Life - Photobooks and Pictures
+url_Real_Life_Video = Nyaa_DOMAIN + '?f=0&c=2_2&q='
 argvalue = sys.argv[1:]
 
 
@@ -60,6 +61,9 @@ if __name__ == '__main__':
         elif argvalue[0] == '6':
             url = url_Real_Life_Photo
             file_category = 'Real_Life_Photo'
+        elif argvalue[0] == '7':
+            url = url_Real_Life_Photo
+            file_category = 'Real_Life_Video'
         else:
             print('退出程序')
             sys.exit()
@@ -71,6 +75,7 @@ if __name__ == '__main__':
               '4:Manga\n'
               '5:Picture\n'
               '6:Real Life_Photo\n'
+              '7:Real Life_Video\n'
               )
         urlChoose = input('选择:')
 
@@ -92,6 +97,9 @@ if __name__ == '__main__':
         elif urlChoose == '6':
             url = url_Real_Life_Photo
             file_category = 'Real_Life_Photo'
+        elif urlChoose == '7':
+            url = url_Real_Life_Video
+            file_category = 'Real_Life_Video'
         else:
             print('退出程序')
             sys.exit()

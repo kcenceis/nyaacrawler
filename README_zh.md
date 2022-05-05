@@ -44,6 +44,8 @@ Python version:3.9
 * imgur.com
 * caching.ovh
 * turboimg.net
+
+etc..
 </pre>
 
 ## 数据库设计

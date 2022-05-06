@@ -130,6 +130,8 @@ def getBookCover(mSoup, nyaa_list):
                     silverpic.get_image(b, nyaa_list)
                 elif re.search('^http[s]?://imgsen.com/.*.html$', str_b):
                     silverpic.get_image(b, nyaa_list)
+                elif re.search('^http[s]?://imgsto.com/.*.html$', str_b):
+                    silverpic.get_image(b, nyaa_list)
 
 
                 elif re.search('^http[s]?://ehgt.org.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):

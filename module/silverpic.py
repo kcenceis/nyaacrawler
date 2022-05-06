@@ -6,7 +6,7 @@ def get_image(url, nyaa_list):
     url_split = url.split('/')
     origin = url_split[0] + '//' + url_split[2]
     id = url_split[3]
-    img_name = url_split[4].replace('.html', '')
+    #img_name = url_split[4].replace('.html', '')
     headers = {
         "origin": origin,
         "Referer": url,

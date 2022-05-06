@@ -48,7 +48,7 @@ def download_img(url, nyaa_list):
 
         # 检查file_history中是否已经存在该文件名 不存在则进行下载
         if not SQLUTILS.isFinish_file_history(nyaa_list):
-            response = mReq.get(url,headers=headers)
+            response = mReq.get(url)
             img = response.content
             with open(path + nyaa_list.file_name, 'wb') as g:
                 g.write(img)

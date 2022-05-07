@@ -15,12 +15,14 @@ def getImageURL(url, nyaa_list, type):
         url = url.replace('://imgblaze.net', '://imgair.net')
     # 开始请求
     req = Utils.getRequest(url)
+    #print(req.text)
     soup = BeautifulSoup(req.text, 'html.parser')
     # 获取包含 document.location.href="https://prcf.imgbig.xyz/ 的字段
-    pattern = re.compile(r"document.getElementById\(\"soDaBug\"\)\.src = \"https://prcf.imgbig.xyz/(.*?);$", re.MULTILINE | re.DOTALL)
+    # 2022/05/07修改
+    pattern = re.compile(r"document.getElementById\(\"newImgE\"\)\.src = \"https://prcf.(.*?);$", re.MULTILINE | re.DOTALL)
     soup_document = soup.find_all('script', text=pattern)[0]
     # 获取字段中的http地址(即图片地址)
     pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')  # 匹配模式
     url = re.findall(pattern, str(soup_document))
-
+    print(url)
     Utils.download_img(url[0], nyaa_list)

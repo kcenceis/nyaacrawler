@@ -1,5 +1,6 @@
 import os
 import re
+from urllib.parse import urlparse
 
 import requests
 from bs4 import BeautifulSoup
@@ -41,11 +42,11 @@ def download_img(url, nyaa_list):
         img_format = re.findall('\.(jpg|bmp|png|jpeg|webp|gif)', url)
 
         nyaa_list.count += 1
-        if nyaa_list.count > 1:
-            nyaa_list.file_name = validateTitle(nyaa_list.title) + str(nyaa_list.count) + '.' + img_format[0]
-        else:
-            nyaa_list.file_name = validateTitle(nyaa_list.title) + '.' + img_format[0]
-
+        #if nyaa_list.count > 1:
+        #    nyaa_list.file_name = validateTitle(nyaa_list.title) + str(nyaa_list.count) + '.' + img_format[0]
+        #else:
+        #    nyaa_list.file_name = validateTitle(nyaa_list.title) + '.' + img_format[0]
+        nyaa_list.file_name = os.path.basename(urlparse(url).path)
         # 检查file_history中是否已经存在该文件名 不存在则进行下载
         if not SQLUTILS.isFinish_file_history(nyaa_list):
             response = mReq.get(url)

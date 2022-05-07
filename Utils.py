@@ -173,6 +173,14 @@ def getBookCover(mSoup, nyaa_list):
                     download_img(b, nyaa_list)
                 elif re.search('^http[s]?://[\w\W]{0,7}catbox\.moe/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
                     download_img(b, nyaa_list)
+
+                # 2022/05/07
+                elif re.search('^http[s]?://[\w\W]{0,7}ckvwpzp.xyz/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
+                    download_img(b, nyaa_list)
+                elif re.search('^http[s]?://[\w\W]{0,7}imgxx.com/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
+                    download_img(b, nyaa_list)
+                elif re.search('^http[s]?://[\w\W]{0,12}imageshack.com/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
+                    download_img(b, nyaa_list)
                 # 不在抓取范围,结束抓取并记录
                 else:
                     SQLUTILS.updateSQL_Download(nyaa_list.address)

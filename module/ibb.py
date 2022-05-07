@@ -4,7 +4,7 @@ import Utils
 
 
 def get_image(url,nyaa_url):
-    r = Utils.mReq.get(url)
+    r = Utils.getRequest(url)
     soup = BeautifulSoup(r.text, 'html.parser')
     i = soup.find('div', id='image-viewer-container')
     image_url = i.find('img')['src']

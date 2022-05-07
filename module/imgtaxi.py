@@ -7,7 +7,7 @@ import Utils
 # imgtaxi.com imgadult.com
 def get_image(url, nyaa_list):
     # 请求
-    r = requests.get(url)
+    r = Utils.getRequest(url)
     # 抓取预览图
     soup = BeautifulSoup(r.text, 'html.parser')
     i = soup.find('meta', property='og:image')

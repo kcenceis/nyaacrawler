@@ -14,7 +14,7 @@ def getImageURL(url, nyaa_list, type):
     elif type == "1":
         url = url.replace('://imgblaze.net', '://imgair.net')
     # 开始请求
-    req = requests.get(url)
+    req = Utils.getRequest(url)
     soup = BeautifulSoup(req.text, 'html.parser')
     # 获取包含 document.location.href="https://prcf.imgbig.xyz/ 的字段
     pattern = re.compile(r"document.getElementById\(\"soDaBug\"\)\.src = \"https://prcf.imgbig.xyz/(.*?);$", re.MULTILINE | re.DOTALL)

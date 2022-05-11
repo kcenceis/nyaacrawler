@@ -11,8 +11,8 @@ url_Art_Doujinshi = Nyaa_DOMAIN + "/?f=0&c=1_2&q="  # 同人志
 url_Art_Games = Nyaa_DOMAIN + "/?f=0&c=1_3&q="  # 游戏
 url_Art_Manga = Nyaa_DOMAIN + '/?f=0&c=1_4&q='  # 漫画
 url_Art_Picture = Nyaa_DOMAIN + '/?f=0&c=1_5&q='  # 图片
-url_Real_Life_Photo = Nyaa_DOMAIN + '?f=0&c=2_1&q='  # Real_Life - Photobooks and Pictures
-url_Real_Life_Video = Nyaa_DOMAIN + '?f=0&c=2_2&q='
+url_Real_Life_Photo = Nyaa_DOMAIN + '/?f=0&c=2_1&q='  # Real_Life - Photobooks and Pictures
+url_Real_Life_Video = Nyaa_DOMAIN + '/?f=0&c=2_2&q='
 argvalue = sys.argv[1:]
 
 

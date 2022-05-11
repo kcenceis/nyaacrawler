@@ -62,7 +62,7 @@ if __name__ == '__main__':
             url = url_Real_Life_Photo
             file_category = 'Real_Life_Photo'
         elif argvalue[0] == '7':
-            url = url_Real_Life_Photo
+            url = url_Real_Life_Video
             file_category = 'Real_Life_Video'
         else:
             print('退出程序')
@@ -107,6 +107,7 @@ if __name__ == '__main__':
     SQLUTILS.DeleteSQL()  # 清除旧数据
     r = Utils.getRequest(url)  # 请求第一个页面
     soup = BeautifulSoup(r.text, 'html.parser')
+
 
     download_pattern = re.compile(r'/download/(?:[0-9])+.torrent')  # 种子pattern
     magnet_pattern = re.compile(r'magnet:\?xt=urn:btih:')  # 磁链pattern

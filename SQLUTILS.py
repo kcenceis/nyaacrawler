@@ -30,7 +30,12 @@ def connSQL():
         c.execute('''CREATE TABLE http_history                      
        (id INTEGER PRIMARY KEY AUTOINCREMENT,
        address        CHAR(50),
+       title          CHAR(200),
+       torrent        CHAR(2000),
+       magnet         CHAR(2000),
+       category       CHAR(2000),
        finish         INT(4),
+       _delete         INT(4),
        dDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
        );''')
         conn.commit()
@@ -42,22 +47,19 @@ def connSQL():
         c.execute('''CREATE TABLE file_history                      
        (id INTEGER PRIMARY KEY AUTOINCREMENT,
        address        CHAR(50),
-       title          CHAR(200),
-       torrent        CHAR(2000),
-       magnet         CHAR(2000),
-       category       CHAR(2000),
        file_name      CHAR(2000),
+       count          INT(4),
        dDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
        );''')
         conn.commit()
         conn.close()
 
 
-def insertSQL(mAddress):
+def insertSQL(nyaa_list):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
-    c.execute("INSERT INTO http_history (address) \
-      VALUES (?)", (mAddress,))
+    c.execute("INSERT INTO http_history (address,title,torrent,magnet,category) \
+      VALUES (?,?,?,?,?)", (nyaa_list.address,nyaa_list.title,nyaa_list.torrent,nyaa_list.magnet,nyaa_list.category,))
     conn.commit()
     c.close()
     conn.close()
@@ -66,14 +68,11 @@ def insertSQL(mAddress):
 def insertSQL_file_history(nyaa_list):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
-    c.execute("INSERT INTO file_history (address,title,torrent,magnet,category,file_name) \
-      VALUES (?,?,?,?,?,?)",
+    c.execute("INSERT INTO file_history (address,file_name,count) \
+      VALUES (?,?,?)",
               (nyaa_list.address,
-               nyaa_list.title,
-               nyaa_list.torrent,
-               nyaa_list.magnet,
-               nyaa_list.category,
-               nyaa_list.file_name,))
+               nyaa_list.file_name,
+               nyaa_list.count,))
     conn.commit()
     c.close()
     conn.close()
@@ -93,11 +92,11 @@ def selectSQL():
 
 
 # 获取有多少相同的地址，返回bool
-def isFinish(mAddress):
+def isFinish(nyaa_list):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
     # 查询数据
-    cursor = c.execute("SELECT count(*) as count  from http_history where address = ? and finish='1'", (mAddress,))
+    cursor = c.execute("SELECT count(*) as count  from http_history where address = ? and finish='1'", (nyaa_list.address,))
     # values = cursor.fetchone()
     result = cursor.fetchone()[0]
     cursor.close()
@@ -113,7 +112,7 @@ def isFinish_file_history(nyaa_list):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
     # 查询数据
-    cursor = c.execute("SELECT count(*) as count  from file_history where file_name = ?", (nyaa_list.file_name,))
+    cursor = c.execute("SELECT count(*) as count  from file_history where file_name = ? and address = ?", (nyaa_list.file_name,nyaa_list.address,))
     # values = cursor.fetchone()
     result = cursor.fetchone()[0]
     cursor.close()
@@ -125,11 +124,11 @@ def isFinish_file_history(nyaa_list):
 
 
 # 获取count，查看是否存在相同条目，返回bool
-def HAS_SQL(mAddress):
+def HAS_SQL(nyaa_list):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
     # 查询数据
-    cursor = c.execute("SELECT count(*) as count  from http_history where address = ?", (mAddress,))
+    cursor = c.execute("SELECT count(*) as count  from http_history where address = ?", (nyaa_list.address,))
     result = cursor.fetchone()[0]
     cursor.close()
     conn.close()

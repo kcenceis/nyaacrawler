@@ -108,7 +108,6 @@ if __name__ == '__main__':
     r = Utils.getRequest(url)  # 请求第一个页面
     soup = BeautifulSoup(r.text, 'html.parser')
 
-
     download_pattern = re.compile(r'/download/(?:[0-9])+.torrent')  # 种子pattern
     magnet_pattern = re.compile(r'magnet:\?xt=urn:btih:')  # 磁链pattern
 
@@ -121,15 +120,21 @@ if __name__ == '__main__':
     for k in soup.find_all('tr', class_='default'):
         book_list.append(init_nyaalist(k))
 
+    # danger代表不能运行,甚至有可能是病毒 不建议抓取 预留条目
+    ## 获取<tr class='danger'>中的所有内容
+    # for k in soup.find_all('tr', class_='danger'):
+    #    book_list.append(init_nyaalist(k))
+
+    # i 为 nyaa_list
     for i in book_list:
         # 检查是否已经下载完成
         # |_未完成
         #  |_数据库不存在该条目 则创建该条目 并下载
         #  |_数据库存在该条目 直接下载
-        if not SQLUTILS.isFinish(i.address):
+        if not SQLUTILS.isFinish(i):
             # 检查数据库是否已经有数据 没有则插入数据
-            if not SQLUTILS.HAS_SQL(i.address):
-                SQLUTILS.insertSQL(i.address)  # 插入数据库
+            if not SQLUTILS.HAS_SQL(i):
+                SQLUTILS.insertSQL(i)  # 插入数据库
                 # 连接并获取网页内容（第二页）
                 Utils.down(i)
             # 有数据则直接下载

@@ -25,7 +25,6 @@ headers['sec-fetch-site'] = 'same-origin'
 headers['sec-fetch-dest'] = 'document'
 headers['upgrade-insecure-requests'] = '1'
 
-
 mReq = requests.session()
 mReq.mount('https://', HTTPAdapter(max_retries=5))
 mReq.mount('http://', HTTPAdapter(max_retries=5))
@@ -39,16 +38,15 @@ def download_img(url, nyaa_list):
     if not os.path.exists(path):
         os.mkdir(path)
     try:
-        img_format = re.findall('\.(jpg|bmp|png|jpeg|webp|gif)', url)
-
-        nyaa_list.count += 1
-        #if nyaa_list.count > 1:
+        # img_format = re.findall('\.(jpg|bmp|png|jpeg|webp|gif)', url)
+        # if nyaa_list.count > 1:
         #    nyaa_list.file_name = validateTitle(nyaa_list.title) + str(nyaa_list.count) + '.' + img_format[0]
-        #else:
+        # else:
         #    nyaa_list.file_name = validateTitle(nyaa_list.title) + '.' + img_format[0]
         nyaa_list.file_name = os.path.basename(urlparse(url).path)
         # 检查file_history中是否已经存在该文件名 不存在则进行下载
         if not SQLUTILS.isFinish_file_history(nyaa_list):
+            nyaa_list.count += 1
             response = mReq.get(url)
             img = response.content
             with open(path + nyaa_list.file_name, 'wb') as g:

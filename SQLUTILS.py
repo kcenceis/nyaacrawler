@@ -59,7 +59,8 @@ def insertSQL(nyaa_list):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
     c.execute("INSERT INTO http_history (address,title,torrent,magnet,category) \
-      VALUES (?,?,?,?,?)", (nyaa_list.address,nyaa_list.title,nyaa_list.torrent,nyaa_list.magnet,nyaa_list.category,))
+      VALUES (?,?,?,?,?)",
+              (nyaa_list.address, nyaa_list.title, nyaa_list.torrent, nyaa_list.magnet, nyaa_list.category,))
     conn.commit()
     c.close()
     conn.close()
@@ -96,7 +97,8 @@ def isFinish(nyaa_list):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
     # 查询数据
-    cursor = c.execute("SELECT count(*) as count  from http_history where address = ? and finish='1'", (nyaa_list.address,))
+    cursor = c.execute("SELECT count(*) as count  from http_history where address = ? and finish='1'",
+                       (nyaa_list.address,))
     # values = cursor.fetchone()
     result = cursor.fetchone()[0]
     cursor.close()
@@ -112,7 +114,24 @@ def isFinish_file_history(nyaa_list):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
     # 查询数据
-    cursor = c.execute("SELECT count(*) as count  from file_history where file_name = ? and address = ?", (nyaa_list.file_name,nyaa_list.address,))
+    cursor = c.execute("SELECT count(*) as count  from file_history where file_name = ? and address = ?",
+                       (nyaa_list.file_name, nyaa_list.address,))
+    # values = cursor.fetchone()
+    result = cursor.fetchone()[0]
+    cursor.close()
+    conn.close()
+    if result == 1:
+        return True
+    else:
+        return False
+
+
+# 获取有多少相同的地址，返回bool
+def isFinish_file_history_duplicate(nyaa_list):
+    conn = sqlite3.connect(SQLDATABASEFILE)
+    c = conn.cursor()
+    # 查询数据
+    cursor = c.execute("SELECT count(*) as count  from file_history where file_name = ?", (nyaa_list.file_name,))
     # values = cursor.fetchone()
     result = cursor.fetchone()[0]
     cursor.close()

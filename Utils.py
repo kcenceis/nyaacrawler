@@ -8,6 +8,8 @@ from requests.adapters import HTTPAdapter
 
 import SQLUTILS
 from module import silverpic, hentaicovers, hentai4free, imgfrost, imagetwist, ibb, imgtaxi, pixxxels
+import random
+import string
 
 proxyON = False  # 是否开启代理
 filePath = os.path.split(os.path.realpath(__file__))[0]  # 获取脚本当前目录
@@ -38,22 +40,36 @@ def download_img(url, nyaa_list):
     if not os.path.exists(path):
         os.mkdir(path)
     try:
-        # img_format = re.findall('\.(jpg|bmp|png|jpeg|webp|gif)', url)
         # if nyaa_list.count > 1:
         #    nyaa_list.file_name = validateTitle(nyaa_list.title) + str(nyaa_list.count) + '.' + img_format[0]
         # else:
         #    nyaa_list.file_name = validateTitle(nyaa_list.title) + '.' + img_format[0]
         nyaa_list.file_name = os.path.basename(urlparse(url).path)
         # 检查file_history中是否已经存在该文件名 不存在则进行下载
+        # 原因：同一个页面中多张相同文件名的图片 同一个页面的相同图片不再下载
+        # 1.精确匹配 相同address file_name则不下载（排除了同页面多次下载同文件
+        #   2.再模糊查询 相同file_name就改名
         if not SQLUTILS.isFinish_file_history(nyaa_list):
             nyaa_list.count += 1
             response = mReq.get(url)
             img = response.content
-            with open(path + nyaa_list.file_name, 'wb') as g:
-                g.write(img)
-                g.writable()
-                SQLUTILS.updateSQL_Download(nyaa_list.address)
-                SQLUTILS.insertSQL_file_history(nyaa_list)
+            # 再判断是否有相同file_name
+            # 无相同则直接用源文件名写入
+            # 相同则随机生成一个文件名
+            if not SQLUTILS.isFinish_file_history_duplicate(nyaa_list):
+                   with open(path + nyaa_list.file_name, 'wb') as g:
+                       g.write(img)
+                       g.writable()
+                       SQLUTILS.updateSQL_Download(nyaa_list.address)
+                       SQLUTILS.insertSQL_file_history(nyaa_list)
+            else:
+                img_format = re.findall('\.(jpg|bmp|png|jpeg|webp|gif)', url)
+                nyaa_list.file_name = random.sample(string.ascii_letters + string.digits, 16)+"."+img_format
+                with open(path + nyaa_list.file_name, 'wb') as g:
+                    g.write(img)
+                    g.writable()
+                    SQLUTILS.updateSQL_Download(nyaa_list.address)
+                    SQLUTILS.insertSQL_file_history(nyaa_list)
 
     except:
         pass

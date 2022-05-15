@@ -64,7 +64,7 @@ def download_img(url, nyaa_list):
                        SQLUTILS.insertSQL_file_history(nyaa_list)
             else:
                 img_format = re.findall('\.(jpg|bmp|png|jpeg|webp|gif)', url)
-                nyaa_list.file_name = random.sample(string.ascii_letters + string.digits, 16)+"."+img_format
+                nyaa_list.file_name = str().join(random.sample(string.ascii_letters + string.digits, 16))+"."+img_format
                 with open(path + nyaa_list.file_name, 'wb') as g:
                     g.write(img)
                     g.writable()

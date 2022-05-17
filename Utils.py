@@ -185,6 +185,8 @@ def getBookCover(mSoup, nyaa_list):
                 # 2022/5/5新增
                 elif re.search('http[s]?://pixxxels.cc/', str_b):
                     pixxxels.getImageURL(b, nyaa_list)
+                elif re.search('http[s]?://postimg.cc/', str_b):
+                    pixxxels.getImageURL(b, nyaa_list)
 
                 elif re.search('^http[s]?://[\w\W]{0,7}ax21pics.net/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
                     download_img(b, nyaa_list)

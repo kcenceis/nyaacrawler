@@ -1,5 +1,6 @@
 import os
 import re
+import time
 from urllib.parse import urlparse
 
 import requests
@@ -19,15 +20,12 @@ proxies = {'http': 'socks5://127.0.0.1:1080',
 
 headers = {}
 headers['User-Agent'] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " \
-                        "Chrome/90.0.4430.93 Safari/537.36 "
+                        "Chrome/114.0.0.0 Safari/537.36"
 headers['Content-Type'] = "application/x-www-form-urlencoded"
-headers['dnt'] = "1"
-headers['sec-ch-ua'] = '" Not A;Brand";v="99", "Chromium";v="90", "Google Chrome";v="90"'
-headers['sec-fetch-site'] = 'same-origin'
-headers['sec-fetch-dest'] = 'document'
-headers['upgrade-insecure-requests'] = '1'
+headers['sec-ch-ua'] = '"Not.A/Brand";v="8", "Chromium";v="114", "Google Chrome";v="114"'
 
 mReq = requests.session()
+mReq.headers = headers
 mReq.mount('https://', HTTPAdapter(max_retries=5))
 mReq.mount('http://', HTTPAdapter(max_retries=5))
 https_pattern = '(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Za-z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Za-z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Za-z0-9+&@#/%=~_|$?!:,.]*\)|[A-Za-z0-9+&@#/%=~_|$])'
@@ -52,27 +50,40 @@ def download_img(url, nyaa_list):
         if not SQLUTILS.isFinish_file_history(nyaa_list):
             nyaa_list.count += 1
             response = mReq.get(url)
+            count = 0
+            while response.status_code != 200:
+                count += 1
+                time.sleep(3)
+                response = mReq.get(url)
+                if count > 4:
+                    pass
             img = response.content
             # 再判断是否有相同file_name
             # 无相同则直接用源文件名写入
             # 相同则随机生成一个文件名
             if not SQLUTILS.isFinish_file_history_duplicate(nyaa_list):
-                   with open(path + nyaa_list.file_name, 'wb') as g:
-                       g.write(img)
-                       g.writable()
-                       SQLUTILS.updateSQL_Download(nyaa_list.address)
-                       SQLUTILS.insertSQL_file_history(nyaa_list)
-            else:
-                img_format = re.findall('\.(jpg|bmp|png|jpeg|webp|gif)', url)
-                nyaa_list.file_name = str().join(random.sample(string.ascii_letters + string.digits, 16))+"."+img_format
                 with open(path + nyaa_list.file_name, 'wb') as g:
                     g.write(img)
                     g.writable()
                     SQLUTILS.updateSQL_Download(nyaa_list.address)
                     SQLUTILS.insertSQL_file_history(nyaa_list)
-
-    except:
+            else:
+                img_format = re.findall('\.(jpg|bmp|png|jpeg|webp|gif)', url)
+                nyaa_list.file_name = str().join(
+                    random.sample(string.ascii_letters + string.digits, 16)) + "." + img_format
+                with open(path + nyaa_list.file_name, 'wb') as g:
+                    g.write(img)
+                    g.writable()
+                    SQLUTILS.updateSQL_Download(nyaa_list.address)
+                    SQLUTILS.insertSQL_file_history(nyaa_list)
+    except Exception as e:
+        # 访问异常的错误编号和详细信息
+        print(e.args)
+        # print(str(e))
+        # print(repr(e))
         pass
+    # finally:
+    #
 
 
 # 连接并获取网页内容（第二页 即/view/111XXXX）
@@ -96,7 +107,7 @@ def getBookCover(mSoup, nyaa_list):
         url = re.findall(https_pattern, b)
         if len(url) > 0:
             for b in url:
-                print("未处理的地址:{}".format(b))  # 抓取到的地址 将要进行抓取的网址
+                print("将要进行抓取的网址:{}".format(b))  # 抓取到的地址 将要进行抓取的网址
                 str_b = str(b)
                 # 文件名定义
 
@@ -214,9 +225,9 @@ def getBookCover(mSoup, nyaa_list):
 def getRequest(http_url):
     # 是否开启代理
     if proxyON:
-        r = mReq.get(url=http_url, headers=headers, proxies=proxies, timeout=10)
+        r = mReq.get(url=http_url, proxies=proxies, timeout=10)
     else:
-        r = mReq.get(url=http_url, headers=headers, timeout=10)
+        r = mReq.get(url=http_url, timeout=10)
     # r.raise_for_status()
     return r
 

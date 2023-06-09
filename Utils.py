@@ -66,7 +66,7 @@ def download_img(url, nyaa_list):
                     g.write(img)
                     g.writable()
                     SQLUTILS.updateSQL_Download(nyaa_list.address)
-                    SQLUTILS.insertSQL_file_history(nyaa_list)
+                    SQLUTILS.insertSQL_file_history(nyaa_list,url)
             else:
                 img_format = re.findall('\.(jpg|bmp|png|jpeg|webp|gif)', url)
                 nyaa_list.file_name = str().join(
@@ -75,7 +75,7 @@ def download_img(url, nyaa_list):
                     g.write(img)
                     g.writable()
                     SQLUTILS.updateSQL_Download(nyaa_list.address)
-                    SQLUTILS.insertSQL_file_history(nyaa_list)
+                    SQLUTILS.insertSQL_file_history(nyaa_list,url)
     except Exception as e:
         # 访问异常的错误编号和详细信息
         print(e.args)

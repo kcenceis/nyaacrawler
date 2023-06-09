@@ -46,9 +46,10 @@ def connSQL():
         # 执行创建表
         c.execute('''CREATE TABLE file_history                      
        (id INTEGER PRIMARY KEY AUTOINCREMENT,
-       address        CHAR(50),
+       nyaa_address        CHAR(50),
        file_name      CHAR(2000),
        count          INT(4),
+       image_url        CHAR(50),
        dDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
        );''')
         conn.commit()
@@ -66,14 +67,16 @@ def insertSQL(nyaa_list):
     conn.close()
 
 
-def insertSQL_file_history(nyaa_list):
+def insertSQL_file_history(nyaa_list,url):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
-    c.execute("INSERT INTO file_history (address,file_name,count) \
+    c.execute("INSERT INTO file_history (nyaa_address,file_name,count,image_address) \
       VALUES (?,?,?)",
               (nyaa_list.address,
                nyaa_list.file_name,
-               nyaa_list.count,))
+               nyaa_list.count,
+               url,
+               ))
     conn.commit()
     c.close()
     conn.close()

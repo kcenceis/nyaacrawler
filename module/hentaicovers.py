@@ -21,20 +21,17 @@ def getImageURL(url, nyaa_list):
     # 抓取IMAGE真实url
     soup = BeautifulSoup(requestCover.text, 'html.parser')
     for kk in soup.find_all('link', rel='image_src'):
-        download_img(kk['href'], nyaa_list)
+        download_img(kk['href'], nyaa_list,url)
     # for kk in soup.find_all('a', 'btn btn-download default'):
     #     print("测试kk:"+kk)
     #     # 下载图片
     #     Utils.download_img(kk['href'], mBookTitle)
 
 
-headers = {}
-headers['User-Agent'] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " \
-                        "Chrome/114.0.0.0 Safari/537.36"
-headers['sec-ch-ua'] = '"Not.A/Brand";v="8", "Chromium";v="114", "Google Chrome";v="114"'
 
 
-def download_img(url, nyaa_list):
+
+def download_img(url, nyaa_list,hentaicovers_url):
     path = Utils.filePath + os.sep + nyaa_list.category + os.sep
     if not os.path.exists(path):
         os.mkdir(path)
@@ -48,15 +45,23 @@ def download_img(url, nyaa_list):
         # 原因：同一个页面中多张相同文件名的图片 同一个页面的相同图片不再下载
         # 1.精确匹配 相同address file_name则不下载（排除了同页面多次下载同文件
         #   2.再模糊查询 相同file_name就改名
+        headers = {}
+        headers['User-Agent'] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " \
+                                "Chrome/114.0.0.0 Safari/537.36"
+        headers['sec-ch-ua'] = '"Not.A/Brand";v="8", "Chromium";v="114", "Google Chrome";v="114"'
+        headers['Sec-Ch-Ua-Mobile'] = "?0"
+        headers['Sec-Ch-Ua-Platform'] = '"Windows"'
+        headers['Referer'] = hentaicovers_url
+        print(hentaicovers_url)
         if not SQLUTILS.isFinish_file_history(nyaa_list):
             nyaa_list.count += 1
-            response = requests.get(url, headers=headers)
+            response = requests.get(url, headers=headers,timeout=10)
             count = 0
             while response.status_code != 200:
                 print("失败")
                 count += 1
                 time.sleep(3)
-                response = requests.get(url, headers=headers)
+                response = requests.get(url, headers=headers, timeout=10)
                 if count > 5:
                     break
             img = response.content

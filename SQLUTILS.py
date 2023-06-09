@@ -71,7 +71,7 @@ def insertSQL_file_history(nyaa_list,url):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
     c.execute("INSERT INTO file_history (nyaa_address,file_name,count,image_address) \
-      VALUES (?,?,?)",
+      VALUES (?,?,?,?)",
               (nyaa_list.address,
                nyaa_list.file_name,
                nyaa_list.count,
@@ -117,7 +117,7 @@ def isFinish_file_history(nyaa_list):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
     # 查询数据
-    cursor = c.execute("SELECT count(*) as count  from file_history where file_name = ? and address = ?",
+    cursor = c.execute("SELECT count(*) as count  from file_history where file_name = ? and nyaa_address = ?",
                        (nyaa_list.file_name, nyaa_list.address,))
     # values = cursor.fetchone()
     result = cursor.fetchone()[0]

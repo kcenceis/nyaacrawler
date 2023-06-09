@@ -3,6 +3,7 @@ import re
 import time
 from urllib.parse import urlparse
 
+import mistune
 import requests
 from bs4 import BeautifulSoup
 from requests.adapters import HTTPAdapter
@@ -11,6 +12,9 @@ import SQLUTILS
 from module import silverpic, hentaicovers, hentai4free, imgfrost, imagetwist, ibb, imgtaxi, pixxxels
 import random
 import string
+
+from module.croea import croea
+from module.imagehaha import imagehaha
 
 proxyON = False  # 是否开启代理
 filePath = os.path.split(os.path.realpath(__file__))[0]  # 获取脚本当前目录
@@ -66,7 +70,7 @@ def download_img(url, nyaa_list):
                     g.write(img)
                     g.writable()
                     SQLUTILS.updateSQL_Download(nyaa_list.address)
-                    SQLUTILS.insertSQL_file_history(nyaa_list,url)
+                    SQLUTILS.insertSQL_file_history(nyaa_list, url)
             else:
                 img_format = re.findall('\.(jpg|bmp|png|jpeg|webp|gif)', url)
                 nyaa_list.file_name = str().join(
@@ -75,7 +79,7 @@ def download_img(url, nyaa_list):
                     g.write(img)
                     g.writable()
                     SQLUTILS.updateSQL_Download(nyaa_list.address)
-                    SQLUTILS.insertSQL_file_history(nyaa_list,url)
+                    SQLUTILS.insertSQL_file_history(nyaa_list, url)
     except Exception as e:
         # 访问异常的错误编号和详细信息
         print(e.args)
@@ -101,9 +105,10 @@ def down(nyaa_list):
 def getBookCover(mSoup, nyaa_list):
     for stringSoup in mSoup.find_all('div', id='torrent-description'):
         b = stringSoup.string  # 获取网页文中字段
-        print(b)
         # b转换为str
         b = str(b)
+        b = mistune.html(b)
+        print(b)
         url = re.findall(https_pattern, b)
         if len(url) > 0:
             for b in url:
@@ -146,6 +151,7 @@ def getBookCover(mSoup, nyaa_list):
                 elif re.search('^http[s]?://imgbaron.com/.*.html$', str_b):
                     silverpic.get_image(b, nyaa_list)
                 # 中间匹配 数字+字母+下划线 10次以上 最后贪婪匹配所有 结尾.html
+                # elif re.search('^http[s]?://pics4you.net/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
                 elif re.search('^http[s]?://pics4you.net/\w{10,}/[\u0000-\uFFFF]+.html$', str_b):
                     silverpic.get_image(b, nyaa_list)
                 elif re.search('^http[s]?://picdollar.com/.*.html$', str_b):
@@ -201,8 +207,6 @@ def getBookCover(mSoup, nyaa_list):
 
                 elif re.search('^http[s]?://[\w\W]{0,7}ax21pics.net/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
                     download_img(b, nyaa_list)
-                elif re.search('^http[s]?://[\w\W]{0,7}catbox\.moe/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
-                    download_img(b, nyaa_list)
 
                 # 2022/05/07
                 elif re.search('^http[s]?://[\w\W]{0,7}ckvwpzp.xyz/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
@@ -213,6 +217,20 @@ def getBookCover(mSoup, nyaa_list):
                     download_img(b, nyaa_list)
                 elif re.search('^http[s]?://pics.dmm.co.jp/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
                     download_img(b, nyaa_list)
+
+                # 2023/06/09
+                # croea,imagehaha,imagexport为同个网页模板,服务端跟imagetwist有关系
+                elif re.search('^http[s]?://[\w\W]{0,7}catbox.moe/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
+                    download_img(b, nyaa_list)
+                # 可能会卡死 不抓取diogo4d
+                # elif re.search('^http[s]?://diogo4d.com/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
+                #    download_img(b, nyaa_list)
+                elif re.search('^http[s]?://imagehaha.com/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
+                    imagehaha(str_b, nyaa_list)
+                elif re.search('^http[s]?://croea.com/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
+                    croea(str_b, nyaa_list)
+                elif re.search('^http[s]?://imagexport.com/.*[jpg|bmp|png|jpeg|webp|gif]$', str_b):
+                    croea(str_b, nyaa_list)
                 # 不在抓取范围,结束抓取并记录
                 else:
                     SQLUTILS.updateSQL_Download(nyaa_list.address)

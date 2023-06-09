@@ -57,7 +57,7 @@ SQLite: bookAddress.db
 <div style=" display:table-cell; float:left;">
     <table>
         <tr>
-            <td colspan="4" align="center">http_history</td>
+            <td colspan="4" align="center">file_history</td>
         </tr>
         <tr>
             <td>Column</td>
@@ -72,7 +72,7 @@ SQLite: bookAddress.db
             <td>PK</td>
         </tr>
         <tr>
-            <td>address</td>
+            <td>nyaa_address</td>
             <td>CHAR</td>
             <td>50</td>
             <td></td>
@@ -89,13 +89,19 @@ SQLite: bookAddress.db
             <td></td>
             <td></td>
         </tr>
+        <tr>
+            <td>image_url</td>
+            <td>CHAR</td>
+            <td>50</td>
+            <td></td>
+        </tr>
     </table>
 </div>
 
 <div style="  display:table-cell;float:left;">
     <table>
         <tr>
-            <td colspan="4" align="center">file_history</td>
+            <td colspan="4" align="center">http_history</td>
         </tr>
         <tr>
             <td>Column</td>

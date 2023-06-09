@@ -49,7 +49,7 @@ def connSQL():
        nyaa_address        CHAR(50),
        file_name      CHAR(2000),
        count          INT(4),
-       image_url        CHAR(50),
+       image_address        CHAR(50),
        dDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
        );''')
         conn.commit()

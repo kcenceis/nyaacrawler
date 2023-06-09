@@ -54,7 +54,7 @@ SQLite: bookAddress.db
 <div style=" display:table-cell; float:left;">
     <table>
         <tr>
-            <td colspan="4" align="center">http_history</td>
+            <td colspan="4" align="center">file_history</td>
         </tr>
         <tr>
             <td>Column</td>
@@ -92,7 +92,7 @@ SQLite: bookAddress.db
 <div style="  display:table-cell;float:left;">
     <table>
         <tr>
-            <td colspan="4" align="center">file_history</td>
+            <td colspan="4" align="center">http_history</td>
         </tr>
         <tr>
             <td>Column</td>

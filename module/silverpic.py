@@ -26,3 +26,6 @@ def get_image(url, nyaa_list):
     soup = BeautifulSoup(r.text, 'html.parser')
     img_link = soup.find('img', class_='pic')['src']
     Utils.download_img(img_link, nyaa_list)
+
+
+

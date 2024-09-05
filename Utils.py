@@ -22,12 +22,6 @@ from DrissionPage import ChromiumPage, ChromiumOptions
 
 filePath = os.path.split(os.path.realpath(__file__))[0]  # 获取脚本当前目录
 # socks代理规则
-proxy_link = requests.get("http://10.1.2.247/proxy_link.json").text
-proxy_json = json.loads(proxy_link)
-proxyON = proxy_json["On"]
-proxyON = 0
-proxies = {'http': proxy_json["proxy"],
-           'https': proxy_json["proxy"]}
 
 headers = {
     'sec-ch-ua': '"Not)A;Brand";v="99", "Microsoft Edge";v="127", "Chromium";v="127"',
@@ -63,6 +57,7 @@ co.set_argument('--guest')
 co.set_argument("--disable-gpu")
 #co.set_proxy("http://10.1.2.253:2000")
 
+proxyON=false
 
 # 进行下载图片 并且记录到数据库
 # 图片的链接,nyaa_list

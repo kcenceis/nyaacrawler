@@ -34,6 +34,9 @@ def connSQL():
        torrent        CHAR(2000),
        magnet         CHAR(2000),
        category       CHAR(2000),
+       Submitter      CHAR(2000),
+       Information    CHAR(2000),
+       Comments       CHAR(2000),
        finish         INT(4),
        _delete         INT(4),
        dDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -59,9 +62,9 @@ def connSQL():
 def insertSQL(nyaa_list):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
-    c.execute("INSERT INTO http_history (address,title,torrent,magnet,category) \
-      VALUES (?,?,?,?,?)",
-              (nyaa_list.address, nyaa_list.title, nyaa_list.torrent, nyaa_list.magnet, nyaa_list.category,))
+    c.execute("INSERT INTO http_history (address,title,torrent,magnet,category,Submitter,Information,Comments) \
+      VALUES (?,?,?,?,?,?,?,?)",
+              (nyaa_list.address, nyaa_list.title, nyaa_list.torrent, nyaa_list.magnet, nyaa_list.category,nyaa_list.Submitter,nyaa_list.Information,nyaa_list.Comments,))
     conn.commit()
     c.close()
     conn.close()
@@ -101,6 +104,22 @@ def isFinish(nyaa_list):
     c = conn.cursor()
     # 查询数据
     cursor = c.execute("SELECT count(*) as count  from http_history where address = ? and finish='1'",
+                       (nyaa_list.address,))
+    # values = cursor.fetchone()
+    result = cursor.fetchone()[0]
+    cursor.close()
+    conn.close()
+    if result == 1:
+        return True
+    else:
+        return False
+
+# 获取有多少相同的地址，返回bool
+def isFinish_download_finish(nyaa_list):
+    conn = sqlite3.connect(SQLDATABASEFILE)
+    c = conn.cursor()
+    # 查询数据
+    cursor = c.execute("select count(*) from file_history where nyaa_address=? and count=1 and file_name='' ",
                        (nyaa_list.address,))
     # values = cursor.fetchone()
     result = cursor.fetchone()[0]
@@ -158,6 +177,15 @@ def HAS_SQL(nyaa_list):
         return True
     else:
         return False
+
+# 更新数据库，标识是否下载完毕
+def updateSQL_http_history_information(nyaa_list):
+    conn = sqlite3.connect(SQLDATABASEFILE)
+    c = conn.cursor()
+    cursor = c.execute('''update http_history set Submitter=?,Information=?,Comments=? where address= ?''', (nyaa_list.Submitter,nyaa_list.Information,nyaa_list.Comments,nyaa_list.address,))
+    conn.commit()
+    cursor.close()
+    conn.close()
 
 
 # 更新数据库，标识是否下载完毕

@@ -51,7 +51,7 @@ if __name__ == '__main__':
     if len(argvalue) != 0:
         if argvalue[0] == "1":
             url = url_Art_Anime
-            file_category = '../../Desktop/nyaacrawler - 副本/Anime'
+            file_category = 'Anime'
         elif argvalue[0] == '2':
             url = url_Art_Doujinshi
             file_category = 'Doujinshi'

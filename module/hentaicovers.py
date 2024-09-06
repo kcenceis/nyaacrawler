@@ -78,7 +78,7 @@ def getImageURL(url, nyaa_list):
         # 获取封面图片对象
         # img = book('img')
         nyaa_list.file_name = os.path.basename(urlparse(book.attr('src')).path)
-        book.save(Utils.filePath + os.sep + nyaa_list.category)
+        book.save(nyaa_list.Path)
         print(book.attr('src'))
     page.quit()
     if nyaa_list.file_name !="":

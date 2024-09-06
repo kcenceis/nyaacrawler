@@ -17,7 +17,6 @@ url_Art_Picture = Nyaa_DOMAIN + '/?f=0&c=1_5&q='  # 图片
 url_Real_Life_Photo = Nyaa_DOMAIN + '/?f=0&c=2_1&q='  # Real_Life - Photobooks and Pictures
 url_Real_Life_Video = Nyaa_DOMAIN + '/?f=0&c=2_2&q='
 argvalue = sys.argv[1:]
-catchMode = 1
 
 
 class nyaa_list:
@@ -52,7 +51,7 @@ if __name__ == '__main__':
     if len(argvalue) != 0:
         if argvalue[0] == "1":
             url = url_Art_Anime
-            file_category = 'Anime'
+            file_category = '../../Desktop/nyaacrawler - 副本/Anime'
         elif argvalue[0] == '2':
             url = url_Art_Doujinshi
             file_category = 'Doujinshi'
@@ -71,8 +70,6 @@ if __name__ == '__main__':
         elif argvalue[0] == '7':
             url = url_Real_Life_Video
             file_category = 'Real_Life_Video'
-        elif argvalue[0] == '8':
-            catchMode = 2
         else:
             print('退出程序')
             sys.exit()
@@ -90,7 +87,7 @@ if __name__ == '__main__':
 
         if urlChoose == '1':
             url = url_Art_Anime
-            file_category = 'Anime'
+            file_category = '../../Desktop/nyaacrawler - 副本/Anime'
         elif urlChoose == '2':
             url = url_Art_Doujinshi
             file_category = 'Doujinshi'
@@ -114,27 +111,26 @@ if __name__ == '__main__':
             sys.exit()
     SQLUTILS.connSQL()  # 检查是否存在数据库
     SQLUTILS.DeleteSQL()  # 清除旧数据
-    if catchMode ==1:
-       r = Utils.getRequest(url)  # 请求第一个页面
-       soup = BeautifulSoup(r.text, 'html.parser')
+    r = Utils.getRequest(url)  # 请求第一个页面
+    soup = BeautifulSoup(r.text, 'html.parser')
 
-       download_pattern = re.compile(r'/download/(?:[0-9])+.torrent')  # 种子pattern
-       magnet_pattern = re.compile(r'magnet:\?xt=urn:btih:')  # 磁链pattern
+    download_pattern = re.compile(r'/download/(?:[0-9])+.torrent')  # 种子pattern
+    magnet_pattern = re.compile(r'magnet:\?xt=urn:btih:')  # 磁链pattern
 
-       book_list = []  # 创建集合2
-       # 获取<tr class='success'>中的所有内容
-       for k in soup.find_all('tr', class_='success'):
-           book_list.append(init_nyaalist(k))
+    book_list = []  # 创建集合2
+    # 获取<tr class='success'>中的所有内容
+    for k in soup.find_all('tr', class_='success'):
+        book_list.append(init_nyaalist(k))
 
-       # 获取<tr class='default'>中的所有内容
-       for k in soup.find_all('tr', class_='default'):
-           book_list.append(init_nyaalist(k))
+    # 获取<tr class='default'>中的所有内容
+    for k in soup.find_all('tr', class_='default'):
+        book_list.append(init_nyaalist(k))
 
-       # danger代表不能运行,甚至有可能是病毒 不建议抓取 预留条目
-       ## 获取<tr class='danger'>中的所有内容
-       # for k in soup.find_all('tr', class_='danger'):
-       #    book_list.append(init_nyaalist(k))
-
+    # danger代表不能运行,甚至有可能是病毒 不建议抓取 预留条目
+    ## 获取<tr class='danger'>中的所有内容
+    # for k in soup.find_all('tr', class_='danger'):
+    #    book_list.append(init_nyaalist(k))
+    try:
        # i 为 nyaa_list
        for i in book_list:
            # 检查是否已经下载完成
@@ -157,3 +153,9 @@ if __name__ == '__main__':
                    Utils.down(i)
            # 循环完成后写入完成
            SQLUTILS.updateSQL_Download(i.address)
+    except Exception as err:
+        print(err)
+        f = open('error.log',mode='a')
+        f.write(err)
+        f.write('\n')
+        f.close()

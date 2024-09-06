@@ -87,7 +87,7 @@ if __name__ == '__main__':
 
         if urlChoose == '1':
             url = url_Art_Anime
-            file_category = '../../Desktop/nyaacrawler - 副本/Anime'
+            file_category = 'Anime'
         elif urlChoose == '2':
             url = url_Art_Doujinshi
             file_category = 'Doujinshi'

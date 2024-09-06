@@ -156,6 +156,6 @@ if __name__ == '__main__':
     except Exception as err:
         print(err)
         f = open('error.log',mode='a')
-        f.write(err)
+        f.write(str(err))
         f.write('\n')
         f.close()

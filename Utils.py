@@ -20,8 +20,6 @@ from module.croea import croea
 from module.imagehaha import imagehaha
 from DrissionPage import ChromiumPage, ChromiumOptions
 
-filePath = os.path.split(os.path.realpath(__file__))[0]  # 获取脚本当前目录
-
 headers = {
     'sec-ch-ua': '"Not)A;Brand";v="99", "Microsoft Edge";v="127", "Chromium";v="127"',
     'sec-ch-ua-mobile': '?0',
@@ -60,7 +58,7 @@ co.set_argument("--disable-gpu")
 # 进行下载图片 并且记录到数据库
 # 图片的链接,nyaa_list
 def download_img(url, nyaa_list):
-    path = filePath + os.sep + nyaa_list.category + os.sep
+    path = nyaa_list.Path + os.sep
     if not os.path.exists(path):
         os.mkdir(path)
     try:
@@ -141,6 +139,11 @@ def down(nyaa_list):
     SQLUTILS.updateSQL_http_history_information(nyaa_list) # 写入Submitter information comments信息到数据
     process_url(page, nyaa_list)
 
+def downimg(a,src,nyaa_list):
+    nyaa_list.count += 1
+    nyaa_list.file_name = os.path.basename(urlparse(src).path)
+    a.save(path=nyaa_list.Path, name=nyaa_list.file_name)
+    SQLUTILS.insertSQL_file_history(nyaa_list, src)
 
 def process_url(page:ChromiumPage,nyaa_list:main.nyaa_list):
     torrent_text = page.eles('tag:div@id=torrent-description')
@@ -152,17 +155,11 @@ def process_url(page:ChromiumPage,nyaa_list:main.nyaa_list):
             src = i.attr('src')
             print("将要进行匹配的网址:{}".format(src))
             if re.search('^http[s]?://[\w\W]{0,2}hentai\.org/.*$', src):
-                #print(filePath + os.sep + nyaa_list.category)
-                i.save(path=filePath + os.sep + nyaa_list.category,name=nyaa_list.file_name)
-                nyaa_list.count += 1
-                nyaa_list.file_name = os.path.basename(urlparse(src).path)
-                SQLUTILS.insertSQL_file_history(nyaa_list, src)
+                downimg(i,src,nyaa_list)
             elif re.search('^http[s]?://[\w\W]{0,2}\.wp\.com/.*$', src):
-                #print(filePath + os.sep + nyaa_list.category)
-                nyaa_list.file_name = os.path.basename(urlparse(src).path)
-                i.save(path=filePath + os.sep + nyaa_list.category,name=nyaa_list.file_name)
-                nyaa_list.count += 1
-                SQLUTILS.insertSQL_file_history(nyaa_list, src)
+                downimg(i,src,nyaa_list)
+            elif re.search('^http[s]?://i.imgur.com/.*.[jpg|bmp|png|jpeg|webp|gif]$', src):
+                downimg(i,src,nyaa_list)
     html_url = [re.findall(https_pattern, item.html) for item in torrent_text]
     page.quit()
     if len(html_url) > 0:

@@ -1,3 +1,4 @@
+import os
 import re
 import sys
 
@@ -6,7 +7,7 @@ from bs4 import BeautifulSoup
 
 import SQLUTILS
 import Utils
-from DrissionPage import ChromiumPage, ChromiumOptions
+from DrissionPage import ChromiumPage, ChromiumOptions,SessionPage
 
 Nyaa_DOMAIN = 'https://sukebei.nyaa.si'
 url_Art_Anime = Nyaa_DOMAIN + "/?f=0&c=1_1&q="  # Anime
@@ -29,21 +30,24 @@ class nyaa_list:
     Information = ''
     Submitter = ''
     Comments = ''
+    Path = ''
     count = 0
 
 
 # 生成nyaa_list 抓取 sukeibe.nyaa 目录 中的 链接 标题 磁链 种子
-def init_nyaalist(soup):
+def init_nyaalist(page_):
     s = nyaa_list()
     s.category = file_category
-    for i in soup.find_all('a'):
+    s.Path = os.path.split(os.path.realpath(__file__))[0]+ os.sep + file_category
+    for i in page_.eles('tag:a'):
         if re.search(download_pattern, str(i)):
-            s.torrent = Nyaa_DOMAIN + i['href']
+            s.torrent =  i.attr('href')
         if re.search(magnet_pattern, str(i)):
-            s.magnet = i['href']
+            s.magnet = i.attr('href')
         if re.search(r'/view/', str(i)):
-            s.address = Nyaa_DOMAIN + i['href']
-            s.title = i['title']
+            #s.address = Nyaa_DOMAIN + i.attr('href')
+            s.address = i.attr('href')
+            s.title = i.attr('title')
     return s
 
 
@@ -111,51 +115,58 @@ if __name__ == '__main__':
             sys.exit()
     SQLUTILS.connSQL()  # 检查是否存在数据库
     SQLUTILS.DeleteSQL()  # 清除旧数据
-    r = Utils.getRequest(url)  # 请求第一个页面
-    soup = BeautifulSoup(r.text, 'html.parser')
+    #r = Utils.getRequest(url)  # 请求第一个页面
+    #soup = BeautifulSoup(r.text, 'html.parser')
+    # 以s模式创建页面对象
+    page = SessionPage()
+    # 访问目标网页
+    page.get(url)
 
     download_pattern = re.compile(r'/download/(?:[0-9])+.torrent')  # 种子pattern
     magnet_pattern = re.compile(r'magnet:\?xt=urn:btih:')  # 磁链pattern
 
     book_list = []  # 创建集合2
     # 获取<tr class='success'>中的所有内容
-    for k in soup.find_all('tr', class_='success'):
+    for k in page.eles('tag:tr@class=success'):
         book_list.append(init_nyaalist(k))
 
     # 获取<tr class='default'>中的所有内容
-    for k in soup.find_all('tr', class_='default'):
+    for k in page.eles('tag:tr@class=default'):
         book_list.append(init_nyaalist(k))
 
     # danger代表不能运行,甚至有可能是病毒 不建议抓取 预留条目
     ## 获取<tr class='danger'>中的所有内容
     # for k in soup.find_all('tr', class_='danger'):
     #    book_list.append(init_nyaalist(k))
-    try:
+
        # i 为 nyaa_list
-       for i in book_list:
+    for i in book_list:
            # 检查是否已经下载完成
            # |_未完成
            #  |_数据库不存在该条目 则创建该条目 并下载
            #  |_数据库存在该条目 直接下载
-           if not SQLUTILS.isFinish(i):
-               # 检查数据库是否已经有数据 没有则插入数据
-               if not SQLUTILS.HAS_SQL(i):
-                   SQLUTILS.insertSQL(i)  # 插入数据库
-                   # 连接并获取网页内容（第二页）
-                   Utils.down(i)
-               # 查询是否已经抓取过 但并没有下载到图片 再重新抓取一次
-               # 返回True则数据并没有下载成功
-               #elif SQLUTILS.isFinish_download_finish(i):
-               #    Utils.down(i)
-               # 有数据则直接下载
-               else:
-                   # 连接并获取网页内容（第二页）
-                   Utils.down(i)
-           # 循环完成后写入完成
-           SQLUTILS.updateSQL_Download(i.address)
-    except Exception as err:
-        print(err)
-        f = open('error.log',mode='a')
-        f.write(str(err))
-        f.write('\n')
-        f.close()
+           try:
+              if not SQLUTILS.isFinish(i):
+                  # 检查数据库是否已经有数据 没有则插入数据
+                  if not SQLUTILS.HAS_SQL(i):
+                      SQLUTILS.insertSQL(i)  # 插入数据库
+                      # 连接并获取网页内容（第二页）
+                      Utils.down(i)
+                  # 查询是否已经抓取过 但并没有下载到图片 再重新抓取一次
+                  # 返回True则数据并没有下载成功
+                  #elif SQLUTILS.isFinish_download_finish(i):
+                  #    Utils.down(i)
+                  # 有数据则直接下载
+                  else:
+                      # 连接并获取网页内容（第二页）
+                      Utils.down(i)
+              # 循环完成后写入完成
+              SQLUTILS.updateSQL_Download(i.address)
+           except Exception as err:
+               print(err)
+               f = open('error.log',mode='a')
+               f.write(str(err))
+               f.write(str(i.address))
+               f.write('\n')
+               f.close()
+               continue

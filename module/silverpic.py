@@ -1,12 +1,16 @@
-from bs4 import BeautifulSoup
-import Utils
+import os
+from urllib.parse import urlparse
+
+from DrissionPage import SessionPage,SessionOptions
+
+import SQLUTILS
+
 
 # pics4you imgsto picdollar imagebam silverpic premalo.com同架构
 def get_image(url, nyaa_list):
     url_split = url.split('/')
     origin = url_split[0] + '//' + url_split[2]
     id = url_split[3]
-    #img_name = url_split[4].replace('.html', '')
     headers = {
         "origin": origin,
         "Referer": url,
@@ -15,17 +19,33 @@ def get_image(url, nyaa_list):
         "dnt": "1",
         'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="90", "Google Chrome";v="90"'
     }
-    r = Utils.mReq.post(url,
-                        headers=headers,
-                        data={
+    co = SessionOptions()
+    co.set_headers(headers)
+    page = SessionPage(co)
+    page.post(url=url,data={
                             'op': 'view',
                             'id': id,
                             'pre': '1',
                             'next': 'Continue to image...'
                         })
-    soup = BeautifulSoup(r.text, 'html.parser')
-    img_link = soup.find('img', class_='pic')['src']
-    Utils.download_img(img_link, nyaa_list)
+    a = page.eles('tag:img@class=pic')[0].attr('src')
+    nyaa_list.file_name = os.path.basename(urlparse(a).path)
+    page.download(a,nyaa_list.Path,nyaa_list.file_name)
+    nyaa_list.count += 1
+    SQLUTILS.insertSQL_file_history(nyaa_list, url)
+
+
+    #r = requests.post(url,
+    #                    headers=headers,
+    #                    data={
+    #                        'op': 'view',
+    #                        'id': id,
+    #                        'pre': '1',
+    #                        'next': 'Continue to image...'
+    #                    })
+    #soup = BeautifulSoup(r.text, 'html.parser')
+    #img_link = soup.find('img', class_='pic')['src']
+    #Utils.download_img(img_link, nyaa_list)
 
 
 

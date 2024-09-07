@@ -35,10 +35,10 @@ class nyaa_list:
 def init_nyaalist(page_):
     s = nyaa_list()
     s.category = file_category
-    s.Path = os.path.split(os.path.realpath(__file__))[0]+ os.sep + file_category
+    s.Path = os.path.split(os.path.realpath(__file__))[0] + os.sep + file_category
     for i in page_.eles('tag:a'):
         if re.search(download_pattern, str(i)):
-            s.torrent =  i.attr('href')
+            s.torrent = i.attr('href')
         if re.search(magnet_pattern, str(i)):
             s.magnet = i.attr('href')
         if re.search(r'/view/', str(i)):
@@ -136,34 +136,33 @@ if __name__ == '__main__':
     # for k in soup.find_all('tr', class_='danger'):
     #    book_list.append(init_nyaalist(k))
 
-       # i 为 nyaa_list
+    # i 为 nyaa_list
     for i in book_list:
-           # 检查是否已经下载完成
-           # |_未完成
-           #  |_数据库不存在该条目 则创建该条目 并下载
-           #  |_数据库存在该条目 直接下载
-           try:
-              if not SQLUTILS.isFinish(i):
-                  # 检查数据库是否已经有数据 没有则插入数据
-                  if not SQLUTILS.HAS_SQL(i):
-                      SQLUTILS.insertSQL(i)  # 插入数据库
-                      # 连接并获取网页内容（第二页）
-                      Utils.down(i)
-                  # 查询是否已经抓取过 但并没有下载到图片 再重新抓取一次
-                  # 返回True则数据并没有下载成功
-                  #elif SQLUTILS.isFinish_download_finish(i):
-                  #    Utils.down(i)
-                  # 有数据则直接下载
-                  else:
-                      # 连接并获取网页内容（第二页）
-                      Utils.down(i)
-              # 循环完成后写入完成
-              SQLUTILS.updateSQL_Download(i.address)
-           except Exception as err:
-               print(err)
-               f = open('error.log',mode='a')
-               f.write(str(err))
-               f.write(str(i.address))
-               f.write('\n')
-               f.close()
-               continue
+        # 检查是否已经下载完成
+        # |_未完成
+        #  |_数据库不存在该条目 则创建该条目 并下载
+        #  |_数据库存在该条目 直接下载
+        try:
+            if not SQLUTILS.isFinish(i):
+                # 检查数据库是否已经有数据 没有则插入数据
+                if not SQLUTILS.HAS_SQL(i):
+                    SQLUTILS.insertSQL(i)  # 插入数据库
+                    # 连接并获取网页内容（第二页）
+                    Utils.down(i)
+                # 查询是否已经抓取过 但并没有下载到图片 再重新抓取一次
+                # 返回True则数据并没有下载成功
+                #elif SQLUTILS.isFinish_download_finish(i):
+                #    Utils.down(i)
+                # 有数据则直接下载
+                else:
+                    # 连接并获取网页内容（第二页）
+                    Utils.down(i)
+            # 循环完成后写入完成
+            SQLUTILS.updateSQL_Download(i.address)
+        except:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            exception_info = "Exception Type: {}\nException Object: {}\nLine Number: {}\nURL:{}".format(exc_type,exc_obj,exc_tb.tb_lineno,i.address)
+            # 将异常信息写入到文件中
+            with open("error.log", "a") as file:
+                file.write(exception_info)
+            continue

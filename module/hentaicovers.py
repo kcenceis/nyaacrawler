@@ -57,30 +57,30 @@ def getImageURL(url, nyaa_list):
     #cookies = ';'.join(it for it in cookies_list)
     #print(zx.get.links()[0])
     #download_img(zx.get.links()[0],nyaa_list,url,cookies)
-    from DrissionPage import ChromiumPage, ChromiumOptions
-    co = ChromiumOptions()
-    co.incognito()  # 无痕模式
-    co.headless()  # 无头模式
-    # 设置UA
-    co.set_user_agent(
-        user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0')
-    co.set_argument('--no-sandbox')
-    co.set_argument('--window-size', '800,600')
-    co.set_argument('--start-maximized')
-    co.set_argument('--guest')
-    co.set_argument("--disable-gpu")
+#    from DrissionPage import ChromiumPage, ChromiumOptions
+#    co = ChromiumOptions()
+#    co.incognito()  # 无痕模式
+#    co.headless()  # 无头模式
+#    # 设置UA
+#    co.set_user_agent(
+#        user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0')
+#    co.set_argument('--no-sandbox')
+#    co.set_argument('--window-size', '800,600')
+#    co.set_argument('--start-maximized')
+#    co.set_argument('--guest')
+#    co.set_argument("--disable-gpu")
 #    co.set_proxy("http://10.1.2.253:10111")
-    page = ChromiumPage(co)
-    page.get(url, retry=3, interval=2, timeout=15)
+#    page = ChromiumPage(co)
+    Utils.page.get(url, retry=3, interval=2, timeout=15)
 #    print(page.html)
-    for book in page.eles('.no-select cursor-zoom-in'):
+    for book in Utils.page.eles('.no-select cursor-zoom-in'):
         #print(book)
         # 获取封面图片对象
         # img = book('img')
         nyaa_list.file_name = os.path.basename(urlparse(book.attr('src')).path)
         book.save(nyaa_list.Path)
         print(book.attr('src'))
-    page.quit()
+#    page.quit()
     if nyaa_list.file_name !="":
        nyaa_list.count += 1
        SQLUTILS.insertSQL_file_history(nyaa_list, url)

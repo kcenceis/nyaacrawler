@@ -53,6 +53,7 @@ co.set_argument('--start-maximized')
 co.set_argument('--guest')
 co.set_argument("--disable-gpu")
 #co.set_proxy("http://10.1.2.253:2000")
+page = ChromiumPage(co)
 
 
 # 进行下载图片 并且记录到数据库
@@ -123,7 +124,7 @@ def validateTitle(title):
 # 连接并获取网页内容（第二页 即/view/111XXXX）
 # 传入nyaa_list
 def down(nyaa_list):
-    page = ChromiumPage(co)
+
     print("将要进行抓取的网址:{}".format(nyaa_list.address))
     page.get(nyaa_list.address)
     for i in page.eles("tag:div@class=row"):
@@ -161,7 +162,7 @@ def process_url(page:ChromiumPage,nyaa_list:main.nyaa_list):
             elif re.search('^http[s]?://i.imgur.com/.*.[jpg|bmp|png|jpeg|webp|gif]$', src):
                 downimg(i,src,nyaa_list)
     html_url = [re.findall(https_pattern, item.html) for item in torrent_text]
-    page.quit()
+    #page.quit()
     if len(html_url) > 0:
         #print(html_url)
         for i in html_url[0]:

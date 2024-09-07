@@ -2,12 +2,9 @@ import os
 import re
 import sys
 
-import requests
-from bs4 import BeautifulSoup
-
 import SQLUTILS
 import Utils
-from DrissionPage import ChromiumPage, ChromiumOptions,SessionPage
+from DrissionPage import SessionPage
 
 Nyaa_DOMAIN = 'https://sukebei.nyaa.si'
 url_Art_Anime = Nyaa_DOMAIN + "/?f=0&c=1_1&q="  # Anime

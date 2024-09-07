@@ -82,7 +82,7 @@ def getImageURL(url, nyaa_list):
         # img = book('img')
         imgUrl = book.attr('src')
         nyaa_list.file_name = Utils.filename_encode(imgUrl)
-        book.save(nyaa_list.Path)
+        book.save(nyaa_list.Path,rename=nyaa_list.file_name)
         print(imgUrl)
     #    page.quit()
     if nyaa_list.file_name != "":

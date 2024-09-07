@@ -106,7 +106,13 @@ def download_img(url, nyaa_list):
         # print(repr(e))
         pass
     # finally:
-    #
+
+# 随机文件名
+def filename_encode(url):
+    img_format = re.findall('\.(jpg|bmp|png|jpeg|webp|gif)', os.path.basename(urlparse(url).path))[0]
+    file_name = str().join(
+        random.sample(string.ascii_letters + string.digits, 16)) + "." + img_format
+    return file_name
 
 # 定义Request方法,request headers 和 proxy
 def getRequest(http_url):
@@ -142,7 +148,7 @@ def down(nyaa_list):
 
 def downimg(a,src,nyaa_list):
     nyaa_list.count += 1
-    nyaa_list.file_name = os.path.basename(urlparse(src).path)
+    nyaa_list.file_name = filename_encode(src)
     a.save(path=nyaa_list.Path, name=nyaa_list.file_name)
     SQLUTILS.insertSQL_file_history(nyaa_list, src)
 

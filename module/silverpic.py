@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 from DrissionPage import SessionPage,SessionOptions
 
 import SQLUTILS
+from Utils import filename_encode
 
 
 # pics4you imgsto picdollar imagebam silverpic premalo.com同架构
@@ -28,8 +29,8 @@ def get_image(url, nyaa_list):
                             'pre': '1',
                             'next': 'Continue to image...'
                         })
-    a = page.eles('tag:img@class=pic')[0].attr('src')
-    nyaa_list.file_name = os.path.basename(urlparse(a).path)
+    a = page.ele('tag:img@class=pic').attr('src')
+    nyaa_list.file_name = filename_encode(a)
     page.download(a,nyaa_list.Path,nyaa_list.file_name)
     nyaa_list.count += 1
     SQLUTILS.insertSQL_file_history(nyaa_list, url)

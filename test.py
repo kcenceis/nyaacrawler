@@ -1,5 +1,10 @@
+import os
+
 from DrissionPage import ChromiumPage, ChromiumOptions
 import re
+
+import Utils
+
 
 class nyaa_list:
     address = ''
@@ -11,7 +16,9 @@ class nyaa_list:
     Information = ''
     Submitter = ''
     Comments = ''
+    Path = ''
     count = 0
+
 
 co = ChromiumOptions()
 co.incognito()  # 无痕模式
@@ -27,8 +34,9 @@ co.set_argument("--disable-gpu")
 # co.set_proxy("http://10.1.2.253:2000")
 page = ChromiumPage(co)
 
-page.get("https://sukebei.nyaa.si/view/4170491")
+page.get("https://sukebei.nyaa.si/view/4171807")
 nyaa_list = nyaa_list()
+
 
 ddd = page.eles("tag:div@class=panel-footer clearfix")
 download_pattern = re.compile(r'/download/(?:[0-9])+.torrent')  # 种子pattern
@@ -49,6 +57,7 @@ for i in page.eles('tag:div@class=panel panel-default'):
 # for i in page.eles('tag:div@class=panel panel-default'):
 category = page.eles('tag:div@class=col-md-5')[0].eles('tag:a')[1].text
 nyaa_list.category = category
+nyaa_list.Path = os.path.split(os.path.realpath(__file__))[0]+ os.sep + category
 for i in page.eles("tag:div@class=row"):
     # for x in i.eles("tag:div@class=row"):
     #    print(x.html)

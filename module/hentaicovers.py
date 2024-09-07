@@ -10,6 +10,8 @@ from bs4 import BeautifulSoup
 
 import SQLUTILS
 import Utils
+
+
 #from selenium import webdriver
 
 def getImageURL(url, nyaa_list):
@@ -18,37 +20,37 @@ def getImageURL(url, nyaa_list):
     url = url.replace(r'表紙 / Cover', '').replace('**', '').replace('Cover', '').strip()
     # 请求图片网页链接
 
-#    options = webdriver.EdgeOptions()
-#    options.use_chromium = True
-#    #options.add_argument('--headless')
-#    browser = webdriver.Edge(options=options)
-#    browser.get(url)
-#    # headers = browser.execute_script("return Object.assign({},window.performance.getEntries()[0].requestHeaders);")
-#    # print(headers)
-#    html = browser.page_source
-#    cookies = browser.get_cookies()
-#    cookies_list = [item["name"] + "=" + item["value"] for item in cookies]
-#    cookies = ';'.join(it for it in cookies_list)
-#    soup = BeautifulSoup(html, 'html.parser')
-#    #requestCover = requests.get(url,headers=headers,verify=False)
-#    #print(requestCover)
-#    ##  ^j^s ^o^vIMAGE ^|^=  ^~url
-#    #soup = BeautifulSoup(requestCover.text, 'html.parser')
-#    #print(soup)
-##
-#    for kk in soup.find_all('link', rel='image_src'):
-#        print(kk['href'])
-#        download_img(kk['href'], nyaa_list, url,cookies)
+    #    options = webdriver.EdgeOptions()
+    #    options.use_chromium = True
+    #    #options.add_argument('--headless')
+    #    browser = webdriver.Edge(options=options)
+    #    browser.get(url)
+    #    # headers = browser.execute_script("return Object.assign({},window.performance.getEntries()[0].requestHeaders);")
+    #    # print(headers)
+    #    html = browser.page_source
+    #    cookies = browser.get_cookies()
+    #    cookies_list = [item["name"] + "=" + item["value"] for item in cookies]
+    #    cookies = ';'.join(it for it in cookies_list)
+    #    soup = BeautifulSoup(html, 'html.parser')
+    #    #requestCover = requests.get(url,headers=headers,verify=False)
+    #    #print(requestCover)
+    #    ##  ^j^s ^o^vIMAGE ^|^=  ^~url
+    #    #soup = BeautifulSoup(requestCover.text, 'html.parser')
+    #    #print(soup)
+    ##
+    #    for kk in soup.find_all('link', rel='image_src'):
+    #        print(kk['href'])
+    #        download_img(kk['href'], nyaa_list, url,cookies)
     # for kk in soup.find_all('a', 'btn btn-download default'):
     #     print("测试kk:"+kk)
     #     # 下载图片
     #     Utils.download_img(kk['href'], mBookTitle)
     #from DrissionPage import ChromiumPage, ChromiumOptions
-#
+    #
     #co = ChromiumOptions()
     #co.headless()
     #page = ChromiumPage(co)
-#
+    #
     #page.get("https://hentai-covers.site/image/sAZs8")
     #print(page.html)
     #zx = page.eles('@rel=image_src')
@@ -57,39 +59,38 @@ def getImageURL(url, nyaa_list):
     #cookies = ';'.join(it for it in cookies_list)
     #print(zx.get.links()[0])
     #download_img(zx.get.links()[0],nyaa_list,url,cookies)
-#    from DrissionPage import ChromiumPage, ChromiumOptions
-#    co = ChromiumOptions()
-#    co.incognito()  # 无痕模式
-#    co.headless()  # 无头模式
-#    # 设置UA
-#    co.set_user_agent(
-#        user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0')
-#    co.set_argument('--no-sandbox')
-#    co.set_argument('--window-size', '800,600')
-#    co.set_argument('--start-maximized')
-#    co.set_argument('--guest')
-#    co.set_argument("--disable-gpu")
-#    co.set_proxy("http://10.1.2.253:10111")
-#    page = ChromiumPage(co)
+    #    from DrissionPage import ChromiumPage, ChromiumOptions
+    #    co = ChromiumOptions()
+    #    co.incognito()  # 无痕模式
+    #    co.headless()  # 无头模式
+    #    # 设置UA
+    #    co.set_user_agent(
+    #        user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0')
+    #    co.set_argument('--no-sandbox')
+    #    co.set_argument('--window-size', '800,600')
+    #    co.set_argument('--start-maximized')
+    #    co.set_argument('--guest')
+    #    co.set_argument("--disable-gpu")
+    #    co.set_proxy("http://10.1.2.253:10111")
+    #    page = ChromiumPage(co)
     Utils.page.get(url, retry=3, interval=2, timeout=15)
-#    print(page.html)
+    #    print(page.html)
+    imgUrl = ""
     for book in Utils.page.eles('.no-select cursor-zoom-in'):
         #print(book)
         # 获取封面图片对象
         # img = book('img')
-        nyaa_list.file_name = os.path.basename(urlparse(book.attr('src')).path)
+        imgUrl = book.attr('src')
+        nyaa_list.file_name = Utils.filename_encode(imgUrl)
         book.save(nyaa_list.Path)
-        print(book.attr('src'))
-#    page.quit()
-    if nyaa_list.file_name !="":
-       nyaa_list.count += 1
-       SQLUTILS.insertSQL_file_history(nyaa_list, url)
+        print(imgUrl)
+    #    page.quit()
+    if nyaa_list.file_name != "":
+        nyaa_list.count += 1
+        SQLUTILS.insertSQL_file_history(nyaa_list, imgUrl)
 
 
-
-
-
-def download_img(url, nyaa_list,hentaicovers_url,cookies):
+def download_img(url, nyaa_list, hentaicovers_url, cookies):
     path = Utils.filePath + os.sep + nyaa_list.category + os.sep
     if not os.path.exists(path):
         os.mkdir(path)
@@ -111,19 +112,19 @@ def download_img(url, nyaa_list,hentaicovers_url,cookies):
                    'Sec-Fetch-Dest': 'document', 'Accept-Encoding': 'gzip, deflate, br, zstd',
                    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
                    'Referer': hentaicovers_url,
-                   'cookies':cookies
+                   'cookies': cookies
                    }
         print(headers)
         print(hentaicovers_url)
         if not SQLUTILS.isFinish_file_history(nyaa_list):
             nyaa_list.count += 1
-            response = requests.get(url,timeout=10,verify=False)
+            response = requests.get(url, timeout=10, verify=False)
             count = 0
             while response.status_code != 200:
                 print("失败")
                 count += 1
                 time.sleep(3)
-                response = requests.get(url,headers=headers,timeout=10,verify=False)
+                response = requests.get(url, headers=headers, timeout=10, verify=False)
                 if count > 5:
                     break
             img = response.content
@@ -134,7 +135,7 @@ def download_img(url, nyaa_list,hentaicovers_url,cookies):
                 with open(path + nyaa_list.file_name, 'wb') as g:
                     g.write(img)
                     g.writable()
-                    SQLUTILS.insertSQL_file_history(nyaa_list,url)
+                    SQLUTILS.insertSQL_file_history(nyaa_list, url)
             else:
                 img_format = re.findall('\.(jpg|bmp|png|jpeg|webp|gif)', url)
                 nyaa_list.file_name = str().join(
@@ -142,7 +143,7 @@ def download_img(url, nyaa_list,hentaicovers_url,cookies):
                 with open(path + nyaa_list.file_name, 'wb') as g:
                     g.write(img)
                     g.writable()
-                    SQLUTILS.insertSQL_file_history(nyaa_list,url)
+                    SQLUTILS.insertSQL_file_history(nyaa_list, url)
     except Exception as e:
         # 访问异常的错误编号和详细信息
         print(e.args)

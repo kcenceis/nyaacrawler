@@ -2,9 +2,10 @@ import os
 import re
 import sys
 
-import SQLUTILS
 import Utils
 from DrissionPage import SessionPage
+
+from SQL import SQLUtils
 
 Nyaa_DOMAIN = 'https://sukebei.nyaa.si'
 url_Art_Anime = Nyaa_DOMAIN + "/?f=0&c=1_1&q="  # Anime
@@ -110,10 +111,11 @@ if __name__ == '__main__':
         else:
             print('退出程序')
             sys.exit()
-    SQLUTILS.connSQL()  # 检查是否存在数据库
-    SQLUTILS.DeleteSQL()  # 清除旧数据
+    #SQLUTILS.connSQL()  # 检查是否存在数据库
+    #SQLUTILS.DeleteSQL()  # 清除旧数据
     #r = Utils.getRequest(url)  # 请求第一个页面
     #soup = BeautifulSoup(r.text, 'html.parser')
+    SQLUtils.conn()
     # 以s模式创建页面对象
     page = SessionPage()
     # 访问目标网页
@@ -143,10 +145,10 @@ if __name__ == '__main__':
         #  |_数据库不存在该条目 则创建该条目 并下载
         #  |_数据库存在该条目 直接下载
         try:
-            if not SQLUTILS.isFinish(i):
+            if not SQLUtils.isFinish(i):
                 # 检查数据库是否已经有数据 没有则插入数据
-                if not SQLUTILS.HAS_SQL(i):
-                    SQLUTILS.insertSQL(i)  # 插入数据库
+                if not SQLUtils.HAS_SQL(i):
+                    SQLUtils.insertSQL(i)  # 插入数据库
                     # 连接并获取网页内容（第二页）
                     Utils.down(i)
                 # 查询是否已经抓取过 但并没有下载到图片 再重新抓取一次
@@ -158,7 +160,9 @@ if __name__ == '__main__':
                     # 连接并获取网页内容（第二页）
                     Utils.down(i)
             # 循环完成后写入完成
-            SQLUTILS.updateSQL_Download(i.address)
+            SQLUtils.updateSQL_Download(i.address)
+        except KeyboardInterrupt as e:
+            sys.exit()
         except:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             exception_info = "Exception Type: {}\nException Object: {}\nLine Number: {}\nURL:{}".format(exc_type,exc_obj,exc_tb.tb_lineno,i.address)

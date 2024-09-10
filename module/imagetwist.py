@@ -1,7 +1,6 @@
 from DrissionPage import SessionPage
-
-import SQLUTILS
 import Utils
+from SQL import SQLUtils
 
 
 def getImageURL(url, nyaa_list):
@@ -13,7 +12,7 @@ def getImageURL(url, nyaa_list):
     page.download(img_url,nyaa_list.Path,nyaa_list.file_name)
     if nyaa_list.file_name !="":
        nyaa_list.count += 1
-       SQLUTILS.insertSQL_file_history(nyaa_list, img_url)
+       SQLUtils.insertSQL_file_history(nyaa_list, img_url)
     #r = Utils.getRequest(url)
     #soup = BeautifulSoup(r.text, 'html.parser')
     #for k in soup.find_all('img', class_='pic img img-responsive'):

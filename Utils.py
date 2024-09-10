@@ -1,18 +1,14 @@
-import json
 import os
 import re
 import time
 from urllib.parse import urlparse
 
-import mistune
 import requests
-from bs4 import BeautifulSoup
 from requests.adapters import HTTPAdapter
 
-import SQLUTILS
 import main
-from main import nyaa_list
-from module import silverpic, hentaicovers, hentai4free, imgfrost, imagetwist, ibb, imgtaxi, pixxxels, xpic
+from SQL import SQLUtils
+from module import silverpic, hentaicovers, hentai4free, imgfrost, imagetwist, ibb, imgtaxi, xpic
 import random
 import string
 
@@ -72,7 +68,7 @@ def download_img(url, nyaa_list):
         # 原因：同一个页面中多张相同文件名的图片 同一个页面的相同图片不再下载
         # 1.精确匹配 相同address file_name则不下载（排除了同页面多次下载同文件
         #   2.再模糊查询 相同file_name就改名
-        if not SQLUTILS.isFinish_file_history(nyaa_list):
+        if not SQLUtils.isFinish_file_history(nyaa_list):
             nyaa_list.count += 1
             response = mReq.get(url)
             count = 0
@@ -86,11 +82,11 @@ def download_img(url, nyaa_list):
             # 再判断是否有相同file_name
             # 无相同则直接用源文件名写入
             # 相同则随机生成一个文件名
-            if not SQLUTILS.isFinish_file_history_duplicate(nyaa_list):
+            if not SQLUtils.isFinish_file_history_duplicate(nyaa_list):
                 with open(path + nyaa_list.file_name, 'wb') as g:
                     g.write(img)
                     g.writable()
-                    SQLUTILS.insertSQL_file_history(nyaa_list, url)
+                    SQLUtils.insertSQL_file_history(nyaa_list, url)
             else:
                 img_format = re.findall('\.(jpg|bmp|png|jpeg|webp|gif)', url)
                 nyaa_list.file_name = str().join(
@@ -98,7 +94,7 @@ def download_img(url, nyaa_list):
                 with open(path + nyaa_list.file_name, 'wb') as g:
                     g.write(img)
                     g.writable()
-                    SQLUTILS.insertSQL_file_history(nyaa_list, url)
+                    SQLUtils.insertSQL_file_history(nyaa_list, url)
     except Exception as e:
         # 访问异常的错误编号和详细信息
         print(e.args)
@@ -143,14 +139,14 @@ def down(nyaa_list):
         elif re.search("Information:", i.html):
             Information = [y.text for y in i.eles("tag:div@class=col-md-5")][0]
             nyaa_list.Information = Information
-    SQLUTILS.updateSQL_http_history_information(nyaa_list) # 写入Submitter information comments信息到数据
+    SQLUtils.updateSQL_http_history_information(nyaa_list) # 写入Submitter information comments信息到数据
     process_url(page, nyaa_list)
 
 def downimg(a,src,nyaa_list):
     nyaa_list.count += 1
     nyaa_list.file_name = filename_encode(src)
     a.save(path=nyaa_list.Path, name=nyaa_list.file_name)
-    SQLUTILS.insertSQL_file_history(nyaa_list, src)
+    SQLUtils.insertSQL_file_history(nyaa_list, src)
 
 def process_url(page:ChromiumPage,nyaa_list:main.nyaa_list):
     torrent_text = page.eles('tag:div@id=torrent-description')

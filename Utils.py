@@ -37,20 +37,7 @@ mReq.mount('https://', HTTPAdapter(max_retries=5))
 mReq.mount('http://', HTTPAdapter(max_retries=5))
 https_pattern = '(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Za-z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Za-z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Za-z0-9+&@#/%=~_|$?!:,.]*\)|[A-Za-z0-9+&@#/%=~_|$])'
 
-co = ChromiumOptions()
-co.incognito()  # 无痕模式
-co.headless()  # 无头模式
-# 设置UA
-co.set_user_agent(
-    user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0')
-co.set_argument('--no-sandbox')
-co.set_argument('--window-size', '800,600')
-co.set_argument('--start-maximized')
-co.set_argument('--guest')
-co.set_argument("--disable-gpu")
-co.auto_port(True)
-# co.set_proxy("http://10.1.2.253:2000")
-page = ChromiumPage(co)
+
 
 
 # 进行下载图片 并且记录到数据库
@@ -127,7 +114,20 @@ def validateTitle(title):
 # 连接并获取网页内容（第二页 即/view/111XXXX）
 # 传入nyaa_list
 def down(nyaa_list):
-
+    co = ChromiumOptions()
+    co.incognito()  # 无痕模式
+    co.headless()  # 无头模式
+    # 设置UA
+    co.set_user_agent(
+        user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0')
+    co.set_argument('--no-sandbox')
+    co.set_argument('--window-size', '800,600')
+    co.set_argument('--start-maximized')
+    co.set_argument('--guest')
+    co.set_argument("--disable-gpu")
+    co.auto_port(True)
+    # co.set_proxy("http://10.1.2.253:2000")
+    page = ChromiumPage(co)
     print("将要进行抓取的网址:{}".format(nyaa_list.address))
     page.get(nyaa_list.address)
     for i in page.eles("tag:div@class=row"):

@@ -106,7 +106,7 @@ def isFinish(nyaa_list):
     conn = initMySQL()
     cursor = conn.cursor()
     # 查询数据
-    cursor.execute("SELECT count(*) as count  from http_history where address = %s and finish='1' or _delete='1'",
+    cursor.execute("SELECT count(*) as count  from http_history where address = %s and finish='1'",
                    (nyaa_list.address,))
     # values = cursor.fetchone()
     result = cursor.fetchone()[0]

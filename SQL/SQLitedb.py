@@ -104,7 +104,7 @@ def isFinish(nyaa_list):
     conn = sqlite3.connect(SQLDATABASEFILE)
     c = conn.cursor()
     # 查询数据
-    cursor = c.execute("SELECT count(*) as count  from http_history where address = ? and finish='1'",
+    cursor = c.execute("SELECT count(*) as count  from http_history where address = ? and finish='1'  or _delete='1'",
                        (nyaa_list.address,))
     # values = cursor.fetchone()
     result = cursor.fetchone()[0]

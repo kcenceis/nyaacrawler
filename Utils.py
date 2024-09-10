@@ -165,7 +165,7 @@ def process_url(page:ChromiumPage,nyaa_list:main.nyaa_list):
             elif re.search('^http[s]?://i.imgur.com/.*.[jpg|bmp|png|jpeg|webp|gif]$', src):
                 downimg(i,src,nyaa_list)
     html_url = [re.findall(https_pattern, item.html) for item in torrent_text]
-    #page.quit()
+    page.quit()
     if len(html_url) > 0:
         #print(html_url)
         for i in html_url[0]:
@@ -301,5 +301,4 @@ def process_url(page:ChromiumPage,nyaa_list:main.nyaa_list):
             # 添加postimg直连图片下载
             elif re.search('http[s]?://i.postimg.cc/', str_b):
                 download_img(b, nyaa_list)
-
             # 不在抓取范围,结束抓取并记录

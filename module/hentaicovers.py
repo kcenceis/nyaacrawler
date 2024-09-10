@@ -74,7 +74,7 @@ def getImageURL(url, nyaa_list):
         nyaa_list.file_name = Utils.filename_encode(imgUrl)
         book.save(nyaa_list.Path,name=nyaa_list.file_name)
         print(imgUrl)
-    #    page.quit()
+    page.quit()
     if nyaa_list.file_name != "":
         nyaa_list.count += 1
         SQLUtils.insertSQL_file_history(nyaa_list, imgUrl)

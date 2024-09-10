@@ -62,7 +62,7 @@ def getImageURL(url, nyaa_list):
     co.set_argument('--guest')
     co.set_argument("--disable-gpu")
     page = ChromiumPage(co)
-    co.auto_port(True)
+    #co.auto_port(True)
     page.get(url, retry=3, interval=2, timeout=15)
     #    print(page.html)
     imgUrl = ""

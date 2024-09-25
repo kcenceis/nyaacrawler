@@ -1,3 +1,4 @@
+# 一次获取所有
 import os
 import re
 import sys

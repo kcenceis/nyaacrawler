@@ -1,7 +1,7 @@
 from SQL import Mysqldb, SQLitedb
 
 # 模式为 MYSQL 和 SQLite
-mode = "MYSQL"
+mode = "SQLite"
 
 
 def conn():

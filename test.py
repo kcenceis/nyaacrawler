@@ -3,7 +3,11 @@ import os
 from DrissionPage import ChromiumPage, ChromiumOptions
 import re
 
+from DrissionPage._pages.session_page import SessionPage
+from var_dump import var_dump
+
 import Utils
+from SQL import SQLUtils
 
 
 class nyaa_list:
@@ -19,25 +23,13 @@ class nyaa_list:
     Path = ''
     count = 0
 
-
-co = ChromiumOptions()
-co.incognito()  # 无痕模式
-co.headless()  # 无头模式
-# 设置UA
-co.set_user_agent(
-    user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0')
-co.set_argument('--no-sandbox')
-co.set_argument('--window-size', '800,600')
-co.set_argument('--start-maximized')
-co.set_argument('--guest')
-co.set_argument("--disable-gpu")
-# co.set_proxy("http://10.1.2.253:2000")
-page = ChromiumPage(co)
-
-page.get("https://sukebei.nyaa.si/view/4171807")
+url = "https://sukebei.nyaa.si/view/4184893"
+SQLUtils.conn()
 nyaa_list = nyaa_list()
-
-
+nyaa_list.address = url
+page = SessionPage()
+# 访问目标网页
+page.get(url)
 ddd = page.eles("tag:div@class=panel-footer clearfix")
 download_pattern = re.compile(r'/download/(?:[0-9])+.torrent')  # 种子pattern
 magnet_pattern = re.compile(r'magnet:\?xt=urn:btih:')  # 磁链pattern
@@ -56,6 +48,7 @@ for i in page.eles('tag:div@class=panel panel-default'):
         nyaa_list.title = k.text
 # for i in page.eles('tag:div@class=panel panel-default'):
 category = page.eles('tag:div@class=col-md-5')[0].eles('tag:a')[1].text
+nyaa_list.Path = os.path.split(os.path.realpath(__file__))[0] + os.sep + category
 nyaa_list.category = category
 nyaa_list.Path = os.path.split(os.path.realpath(__file__))[0]+ os.sep + category
 for i in page.eles("tag:div@class=row"):
@@ -67,4 +60,4 @@ for i in page.eles("tag:div@class=row"):
     elif re.search("Information:", i.html):
         Information = [y.text for y in i.eles("tag:div@class=col-md-5")][0]
         nyaa_list.Information = Information
-Utils.process_url(page, nyaa_list)
+Utils.down(nyaa_list)

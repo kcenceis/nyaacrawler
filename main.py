@@ -162,11 +162,13 @@ if __name__ == '__main__':
             # 循环完成后写入完成
             SQLUtils.updateSQL_Download(i.address)
         except KeyboardInterrupt as e:
+
             sys.exit()
         except:
             exc_type, exc_obj, exc_tb = sys.exc_info()
-            exception_info = "Exception Type: {}\nException Object: {}\nLine Number: {}\nURL:{}".format(exc_type,exc_obj,exc_tb.tb_lineno,i.address)
+            exception_info = "Exception Type: {}\nException Object: {}\nLine Number: {}\nURL:{}\n".format(exc_type,exc_obj,exc_tb.tb_lineno,i.address)
             # 将异常信息写入到文件中
             with open("error.log", "a") as file:
                 file.write(exception_info)
             continue
+    Utils.page.quit()

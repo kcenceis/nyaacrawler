@@ -32,7 +32,7 @@ def check_database(database):
         mydb.close()
         return True
     else:
-        cursor.execute("CREATE DATABASE nyaacrawler")
+        cursor.execute("CREATE DATABASE "+db)
         mydb.commit()
         mydb.close()
         return False
@@ -40,7 +40,7 @@ def check_database(database):
 
 # 创建数据库
 def conn():
-    if not check_database('nyaacrawler'):
+    if not check_database(db):
         mydb = initMySQL()
         cursor = mydb.cursor()
         cursor.execute('''
@@ -49,18 +49,18 @@ def conn():
         address        VARCHAR(200),
         title          VARCHAR(200),
         torrent        VARCHAR(200),
-        magnet         VARCHAR(1000),
+        magnet         text,
         category       VARCHAR(200),
-        Submitter      VARCHAR(200),
-        Information    VARCHAR(200),
-        Comments       VARCHAR(200),
+        Submitter      text,
+        Information    text,
+        Comments       text,
         finish         INT(4),
         _delete         INT(4),
         dDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        data1          VARCHAR(200),
-        data2          VARCHAR(200),
-        data3          VARCHAR(200),
-        data4          VARCHAR(200)
+        data1          text,
+        data2          text,
+        data3          text,
+        data4          text
         );
         ''')
         # 执行创建表
@@ -72,10 +72,10 @@ def conn():
        count          INT(4),
        image_address  VARCHAR(200),
        dDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-       data1          VARCHAR(200),
-       data2          VARCHAR(200),
-       data3          VARCHAR(200),
-       data4          VARCHAR(200)
+       data1          text,
+       data2          text,
+       data3          text,
+       data4          text
        );''')
         mydb.commit()
         mydb.close()
@@ -181,7 +181,7 @@ def updateSQL_Download(mADDRESS):
 
 # 删除180日前的数据
 def DeleteSQL():
-    if check_database('nyaacrawler'):
+    if check_database(db):
         conn = initMySQL()
         cursor = conn.cursor()
         cursor.execute("DELETE FROM http_history WHERE dDate < DATE_SUB(NOW(), INTERVAL 180 DAY);")  # 删除180日之前的数据

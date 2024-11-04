@@ -151,11 +151,11 @@ def down(nyaa_list):
                 Information = [y.text for y in i.eles("tag:div@class=col-md-5")][0]
                 nyaa_list.Information = Information
         SQLUtils.updateSQL_http_history_information(nyaa_list) # 写入Submitter information comments信息到数据
-        torrent_text = page.eles('tag:div@id=torrent-description')
-        tag_img = [item.eles('tag:img') for item in torrent_text]
+        torrent_text = page.ele('tag:div@id=torrent-description')
+        tag_img = torrent_text.eles('tag:img')
         htmlurl_list = []
         if len(tag_img)>0:
-            for i in tag_img[0]:
+            for i in tag_img:
                 src = i.attr('src')
                 print("将要进行匹配的网址:{}".format(src))
                 if re.search('^http[s]?://[\w\W]{0,2}hentai\.org/.*$', src):
@@ -164,12 +164,11 @@ def down(nyaa_list):
                     downimg(i,src,nyaa_list)
                 elif re.search('^http[s]?://i.imgur.com/.*.[jpg|bmp|png|jpeg|webp|gif]$', src):
                     downimg(i,src,nyaa_list)
-        html_url = [re.findall(https_pattern, item.html) for item in torrent_text]
+        html_url = re.findall(https_pattern, torrent_text.html)
         if len(html_url) > 0:
             #print(html_url)
-            for i in html_url[0]:
-                if i not in htmlurl_list:
-                   htmlurl_list.append(i)
+            for i in html_url:
+                add_unique_element(htmlurl_list,str(i))
             for b in htmlurl_list:
                 print("将要进行抓取的网址:{}".format(b))  # 抓取到的地址 将要进行抓取的网址
                 str_b = str(b)

@@ -59,12 +59,17 @@ for category,url in url_list.items():
     page.get(url)
     book_list = []  # 创建集合2
     # 获取<tr class='success'>中的所有内容
+    tr_address = []
     for k in page.eles('tag:tr@class=success'):
-        book_list.append(init_nyaalist(k,category))
+        Utils.add_unique_element(tr_address,k)
+
 
     # 获取<tr class='default'>中的所有内容
     for k in page.eles('tag:tr@class=default'):
-        book_list.append(init_nyaalist(k,category))
+        Utils.add_unique_element(tr_address, k)
+
+    for k in tr_address:
+        book_list.append(init_nyaalist(k, category))
 
     # i 为 nyaa_list
     for i in book_list:
@@ -73,6 +78,7 @@ for category,url in url_list.items():
         #  |_数据库不存在该条目 则创建该条目 并下载
         #  |_数据库存在该条目 直接下载
         try:
+            # 查询是否已经下载完 并且有数据
             if not SQLUtils.isFinish(i):
                 # 检查数据库是否已经有数据 没有则插入数据
                 if not SQLUtils.HAS_SQL(i):

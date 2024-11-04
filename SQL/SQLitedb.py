@@ -110,7 +110,7 @@ def isFinish(nyaa_list):
     result = cursor.fetchone()[0]
     cursor.close()
     conn.close()
-    if result == 1:
+    if result >= 1:
         return True
     else:
         return False
@@ -127,7 +127,7 @@ def isFinish_download_finish(nyaa_list):
     result = cursor.fetchone()[0]
     cursor.close()
     conn.close()
-    if result == 1:
+    if result >= 1:
         return True
     else:
         return False
@@ -144,7 +144,7 @@ def isFinish_file_history(nyaa_list):
     result = cursor.fetchone()[0]
     cursor.close()
     conn.close()
-    if result == 1:
+    if result >= 1:
         return True
     else:
         return False
@@ -160,7 +160,7 @@ def isFinish_file_history_duplicate(nyaa_list):
     result = cursor.fetchone()[0]
     cursor.close()
     conn.close()
-    if result == 1:
+    if result >= 1:
         return True
     else:
         return False
@@ -175,7 +175,7 @@ def HAS_SQL(nyaa_list):
     result = cursor.fetchone()[0]
     cursor.close()
     conn.close()
-    if result == 1:
+    if result >= 1:
         return True
     else:
         return False

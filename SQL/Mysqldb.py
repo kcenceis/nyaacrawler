@@ -111,7 +111,7 @@ def isFinish(nyaa_list):
     # values = cursor.fetchone()
     result = cursor.fetchone()[0]
     conn.close()
-    if result == 1:
+    if result >= 1:
         return True
     else:
         return False
@@ -125,7 +125,7 @@ def isFinish_file_history(nyaa_list):
                    (nyaa_list.file_name, nyaa_list.address,))
     result = cursor.fetchone()[0]
     conn.close()
-    if result == 1:
+    if result >= 1:
         return True
     else:
         return False
@@ -139,7 +139,7 @@ def isFinish_file_history_duplicate(nyaa_list):
     # values = cursor.fetchone()
     result = cursor.fetchone()[0]
     conn.close()
-    if result == 1:
+    if result >= 1:
         return True
     else:
         return False
@@ -152,7 +152,7 @@ def HAS_SQL(nyaa_list):
     cursor.execute("SELECT count(*) as count  from http_history where address = %s", (nyaa_list.address,))
     result = cursor.fetchone()[0]
     conn.close()
-    if result == 1:
+    if result >= 1:
         return True
     else:
         return False

@@ -1,10 +1,8 @@
 import os
 
-from DrissionPage import ChromiumPage, ChromiumOptions
+from DrissionPage import ChromiumPage, ChromiumOptions,SessionPage
 import re
-
-from DrissionPage._pages.session_page import SessionPage
-from var_dump import var_dump
+#from var_dump import var_dump
 
 import Utils
 from SQL import SQLUtils
@@ -23,7 +21,7 @@ class nyaa_list:
     Path = ''
     count = 0
 
-url = "https://sukebei.nyaa.si/view/4184893"
+url = "https://sukebei.nyaa.si/view/4218436"
 SQLUtils.conn()
 nyaa_list = nyaa_list()
 nyaa_list.address = url

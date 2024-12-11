@@ -171,4 +171,3 @@ if __name__ == '__main__':
             with open(os.path.split(os.path.realpath(__file__))[0]+os.sep+"error.log", "a") as file:
                 file.write(exception_info)
             continue
-    Utils.page.quit()

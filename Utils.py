@@ -8,7 +8,7 @@ from requests.adapters import HTTPAdapter
 
 import main
 from SQL import SQLUtils
-from module import silverpic, hentaicovers, hentai4free, imgfrost, imagetwist, ibb, imgtaxi, xpic
+from module import silverpic, hentaicovers, hentai4free, imgfrost, imagetwist, ibb, imgtaxi, xpic, hentaicovid
 import random
 import string
 
@@ -299,6 +299,20 @@ def down(nyaa_list):
                 # 添加postimg直连图片下载
                 elif re.search('http[s]?://i.postimg.cc/', str_b):
                     download_img(b, nyaa_list)
+
+
+                # 2024/12/11
+                # 添加hentaicovid类型网站的抓取
+                elif re.search('http[s]?://hentaicovid.com/uploads/',str_b):
+                    hentaicovid.get_image(b, nyaa_list)
+                elif re.search('http[s]?://javsunday.com/upload/',str_b):
+                    hentaicovid.get_image(b, nyaa_list)
+                elif re.search('http[s]?://kin8-av.com/upload/',str_b):
+                    hentaicovid.get_image(b, nyaa_list)
+                elif re.search('http[s]?://555fap.com/upload/',str_b):
+                    hentaicovid.get_image(b, nyaa_list)
+
+
                 # 不在抓取范围,结束抓取并记录
     finally:
         page.quit(force=True)

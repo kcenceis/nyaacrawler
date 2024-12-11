@@ -18,14 +18,14 @@ def get_image(url, nyaa_list):
         'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="90", "Google Chrome";v="90"'
     }
     co = SessionOptions()
-    co.set_headers(headers)
+#    co.set_headers(headers)
     page = SessionPage(co)
     page.post(url=url,data={
                             'op': 'view',
                             'id': id,
                             'pre': '1',
                             'next': 'Continue to image...'
-                        })
+                        },headers=headers)
     a = page.ele('tag:img@class=pic').attr('src')
     nyaa_list.file_name = Utils.filename_encode(a)
     page.download(a,nyaa_list.Path,nyaa_list.file_name)

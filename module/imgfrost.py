@@ -1,7 +1,11 @@
+import os
+from urllib.parse import urlparse
+
 import requests
 import re
 from bs4 import BeautifulSoup
 import Utils
+from SQL import SQLUtils
 
 
 # type=0 imgfrost.net
@@ -15,8 +19,11 @@ def getImageURL(url, nyaa_list, type):
         url = url.replace('://imgblaze.net', '://imgair.net')
     # 开始请求
     #req = Utils.getRequest(url)
-    req = requests.get(url)
+    r = requests.session()
+    req = r.get(url)
     print(req.text)
+    Utils.mReq = r
+
 
     soup = BeautifulSoup(req.text, 'html.parser')
     # 获取包含 document.location.href="https://prcf.imgbig.xyz/ 的字段
@@ -29,4 +36,17 @@ def getImageURL(url, nyaa_list, type):
     pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')  # 匹配模式
     url = re.findall(pattern, str(soup_document))
     print(url)
-    Utils.download_img(url[0], nyaa_list)
+
+    response = r.get(url[0],headers={
+        "referer":"https://imgqqwebrf.sbs/"
+    })
+    img = response.content
+    path = nyaa_list.Path + os.sep
+    if not os.path.exists(path):
+        os.mkdir(path)
+    print(path + nyaa_list.file_name)
+    nyaa_list.file_name = os.path.basename(urlparse(url[0]).path)
+    with open(path + nyaa_list.file_name, 'wb') as g:
+        g.write(img)
+        g.writable()
+        SQLUtils.insertSQL_file_history(nyaa_list, url)
